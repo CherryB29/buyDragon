@@ -1,0 +1,1632 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>용사 키우기</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+    
+    * {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: #030712;
+      color: #f3f4f6;
+      overflow: hidden;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
+    ::-webkit-scrollbar-thumb { background: #374151; border-radius: 4px; }
+
+    /* Damage popup */
+    .dmg-popup {
+      position: absolute;
+      font-weight: 900;
+      pointer-events: none;
+      animation: popAndFade 0.55s ease-out forwards;
+      z-index: 50;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.9);
+    }
+
+    @keyframes popAndFade {
+      0% { transform: translateY(0) scale(0.6); opacity: 1; }
+      40% { transform: translateY(-25px) scale(1.2); opacity: 1; }
+      100% { transform: translateY(-50px) scale(0.9); opacity: 0; }
+    }
+
+    /* Hit shake */
+    .hit-shake {
+      animation: hitShakeAnim 0.13s ease-in-out;
+      filter: brightness(2.5) grayscale(1) drop-shadow(0 0 12px #ffffff) !important;
+    }
+
+    @keyframes hitShakeAnim {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-8px) rotate(-2deg); }
+      75% { transform: translateX(8px) rotate(2deg); }
+    }
+
+    /* Reel Slide Down Effect */
+    .reel-shifted {
+      transform: translateY(60px);
+      transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .reel-spinning {
+      animation: reelSpin 0.18s linear infinite;
+      border-color: #818cf8 !important;
+      box-shadow: 0 0 24px rgba(99, 102, 241, 0.45), inset 0 0 24px rgba(99, 102, 241, 0.12);
+    }
+
+    .reel-braking {
+      animation: reelBrake 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    .reel-winner {
+      animation: reelWinner 0.7s cubic-bezier(0.17, 0.84, 0.44, 1) forwards;
+    }
+
+    @keyframes reelSpin {
+      0% { transform: translateY(-3px) rotate(-1deg); }
+      50% { transform: translateY(3px) rotate(1deg); }
+      100% { transform: translateY(-3px) rotate(-1deg); }
+    }
+
+    @keyframes reelBrake {
+      0% { transform: scale(1.03); filter: blur(2px); }
+      55% { transform: scale(0.96); filter: blur(0); }
+      100% { transform: scale(1); filter: blur(0); }
+    }
+
+    @keyframes reelWinner {
+      0% { border-color: #818cf8; box-shadow: 0 0 0 rgba(251, 191, 36, 0); }
+      45% { border-color: #fbbf24; box-shadow: 0 0 34px rgba(251, 191, 36, 0.75), inset 0 0 28px rgba(251, 191, 36, 0.22); }
+      100% { border-color: rgba(251, 191, 36, 0.8); box-shadow: 0 0 18px rgba(251, 191, 36, 0.28); }
+    }
+
+    /* Avatar Pop In */
+    .avatar-pop {
+      animation: avatarPopIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+    @keyframes avatarPopIn {
+      0% { transform: scale(0); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .skill-burst {
+      animation: skillBurst 0.45s ease-out;
+    }
+
+    @keyframes skillBurst {
+      0% { filter: brightness(1); transform: scale(1); }
+      35% { filter: brightness(2.4) drop-shadow(0 0 16px #67e8f9); transform: scale(1.12); }
+      100% { filter: brightness(1); transform: scale(1); }
+    }
+
+    .mob-blocking {
+      animation: blockPulse 0.7s ease-in-out infinite alternate;
+      filter: drop-shadow(0 0 12px #60a5fa) !important;
+    }
+
+    @keyframes blockPulse {
+      from { transform: scale(1); }
+      to { transform: scale(1.08); }
+    }
+
+    .mob-frozen {
+      filter: drop-shadow(0 0 14px #67e8f9) saturate(0.35) !important;
+    }
+
+    .upgrade-available {
+      background: #fbbf24 !important;
+      color: #111827 !important;
+      border-color: #fde68a !important;
+      box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.28), 0 6px 16px rgba(251, 191, 36, 0.2);
+    }
+
+    .mission-reward-float {
+      position: absolute;
+      left: 50%;
+      top: -1.5rem;
+      transform: translateX(-50%);
+      color: #fbbf24;
+      font-size: 0.8rem;
+      font-weight: 900;
+      white-space: nowrap;
+      pointer-events: none;
+      z-index: 20;
+      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
+      animation: missionRewardFloat 0.9s ease-out forwards;
+    }
+
+    @keyframes missionRewardFloat {
+      0% { opacity: 0; transform: translate(-50%, 0) scale(0.75); }
+      20% { opacity: 1; transform: translate(-50%, -4px) scale(1.1); }
+      100% { opacity: 0; transform: translate(-50%, -30px) scale(1); }
+    }
+
+    .skill-replace-target {
+      border-color: #fbbf24 !important;
+      box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.3), 0 0 16px rgba(251, 191, 36, 0.35);
+      animation: replaceTargetPulse 0.8s ease-in-out infinite alternate;
+    }
+
+    .skill-replace-target::after {
+      content: '↔';
+      position: absolute;
+      right: -0.45rem;
+      top: -0.55rem;
+      width: 1.1rem;
+      height: 1.1rem;
+      border-radius: 999px;
+      background: #fbbf24;
+      color: #111827;
+      font-size: 0.7rem;
+      font-weight: 900;
+      line-height: 1.1rem;
+      z-index: 5;
+    }
+
+    @keyframes replaceTargetPulse {
+      from { transform: translateY(0); }
+      to { transform: translateY(-3px); }
+    }
+
+    .hit-shake {
+      animation: hitShakeAnim 0.13s ease-in-out !important;
+      filter: brightness(2.5) grayscale(1) drop-shadow(0 0 12px #ffffff) !important;
+    }
+
+    .freeze-flash { animation: freezeFlash 0.65s ease-out; }
+    .skill-thunder { animation: thunderFlash 0.35s ease-out; }
+    .skill-poison { animation: poisonPulse 0.55s ease-out; }
+    .skill-shadow { animation: shadowSlash 0.3s ease-out; }
+    .skill-quake { animation: quakePulse 0.5s ease-out; }
+    .skill-wind { animation: windRush 0.32s ease-out; }
+    .skill-power { animation: powerFlash 0.55s ease-out; }
+    .skill-haste { animation: hasteFlash 0.55s ease-out; }
+    .skill-gold { animation: goldFlash 0.55s ease-out; }
+
+    @keyframes freezeFlash {
+      0% { filter: brightness(2.5) drop-shadow(0 0 18px #67e8f9); transform: scale(1.2); }
+      100% { filter: brightness(1) drop-shadow(0 0 0 transparent); transform: scale(1); }
+    }
+    @keyframes thunderFlash {
+      0%, 25% { filter: brightness(2.8) drop-shadow(0 0 18px #fde047); transform: translateX(-4px); }
+      50%, 75% { filter: brightness(1.5) drop-shadow(0 0 10px #facc15); transform: translateX(4px); }
+      100% { filter: brightness(1); transform: translateX(0); }
+    }
+    @keyframes poisonPulse {
+      0% { filter: saturate(2) hue-rotate(70deg) drop-shadow(0 0 16px #a3e635); transform: scale(0.95); }
+      100% { filter: saturate(1) hue-rotate(0deg); transform: scale(1); }
+    }
+    @keyframes shadowSlash {
+      0% { filter: brightness(0.25) drop-shadow(0 0 14px #c084fc); transform: translateX(10px) skewX(-8deg); }
+      100% { filter: brightness(1); transform: translateX(0) skewX(0); }
+    }
+    @keyframes quakePulse {
+      0%, 100% { transform: translateX(0); filter: drop-shadow(0 0 0 transparent); }
+      25% { transform: translateX(-7px) rotate(-3deg); filter: drop-shadow(0 0 14px #fb923c); }
+      75% { transform: translateX(7px) rotate(3deg); filter: drop-shadow(0 0 14px #fb923c); }
+    }
+    @keyframes windRush {
+      0% { opacity: 0.5; filter: blur(3px) drop-shadow(0 0 14px #38bdf8); transform: translateX(-18px); }
+      100% { opacity: 1; filter: blur(0); transform: translateX(0); }
+    }
+    @keyframes powerFlash {
+      0% { filter: brightness(1); transform: scale(1); }
+      45% { filter: brightness(2.5) drop-shadow(0 0 20px #fb7185); transform: scale(1.16); }
+      100% { filter: brightness(1); transform: scale(1); }
+    }
+    @keyframes hasteFlash {
+      0% { filter: blur(2px) drop-shadow(0 0 16px #f8fafc); transform: translateX(-14px); }
+      50% { filter: brightness(2) drop-shadow(0 0 18px #22d3ee); transform: translateX(12px); }
+      100% { filter: blur(0); transform: translateX(0); }
+    }
+    @keyframes goldFlash {
+      0% { filter: brightness(1); transform: rotate(0); }
+      35% { filter: brightness(2.4) drop-shadow(0 0 18px #facc15); transform: rotate(-5deg) scale(1.12); }
+      70% { transform: rotate(5deg) scale(1.08); }
+      100% { filter: brightness(1); transform: rotate(0) scale(1); }
+    }
+  </style>
+</head>
+<body class="flex justify-center items-center min-h-screen bg-gray-950">
+
+<div id="app" class="w-full max-w-md h-[100dvh] bg-gray-950 relative flex flex-col overflow-hidden border-x border-gray-800 shadow-2xl">
+
+  <!-- 1. GACHA INTRO SCREEN -->
+  <div id="gacha-screen" class="absolute inset-0 bg-gradient-to-b from-gray-950 via-slate-900 to-gray-950 z-50 flex flex-col justify-between p-6 text-center">
+    
+    <div class="pt-6">
+      <span class="px-3 py-1 bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 rounded-full text-xs font-semibold tracking-wide">HERO SUMMON</span>
+      <h1 class="text-2xl font-black text-white mt-3 tracking-tight">운명의 용사 소환</h1>
+    </div>
+
+    <!-- Center Reel & Avatar Container -->
+    <div class="relative flex flex-col items-center justify-center my-auto w-full">
+      
+      <!-- Avatar Image -->
+      <div id="hero-avatar-wrapper" class="hidden mb-4 relative z-10">
+        <div class="w-24 h-24 rounded-full border-4 border-amber-400 p-1 bg-gray-900 shadow-xl avatar-pop relative">
+          <img id="gacha-avatar-img" src="" class="w-full h-full rounded-full object-cover">
+          <span class="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-amber-500 text-black text-[10px] font-black px-2 py-0.5 rounded-full shadow whitespace-nowrap">READY</span>
+        </div>
+      </div>
+
+      <!-- Reel Box -->
+      <div id="reel-box" class="w-full h-20 bg-gray-900/90 border-2 border-amber-400/80 rounded-2xl flex items-center justify-center shadow-lg backdrop-blur-md">
+        <span id="reel-text" class="text-2xl font-black tracking-wider text-amber-300">???</span>
+      </div>
+
+      <!-- Loading Progress Overlay -->
+      <div id="gacha-loading" class="hidden mt-6 w-full max-w-xs flex-col items-center gap-2">
+        <div class="flex justify-between w-full text-xs text-gray-400 font-semibold">
+          <span>차원 동기화...</span>
+          <span id="loading-pct">0%</span>
+        </div>
+        <div class="w-full bg-gray-800 h-2 rounded-full overflow-hidden border border-gray-700">
+          <div id="loading-bar" class="bg-gradient-to-r from-indigo-500 to-amber-400 h-full w-0 transition-all duration-75"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Trigger Button -->
+    <div class="pb-4">
+      <button id="btn-spin" onclick="startGachaSpin()" class="w-full py-4 bg-gradient-to-r from-indigo-600 to-indigo-500 active:from-indigo-700 text-white font-extrabold text-lg rounded-xl shadow-lg transition-transform active:scale-95">
+        🎲 용사 소환하기
+      </button>
+    </div>
+  </div>
+
+  <!-- 2. GAME HEADER -->
+  <header class="bg-gray-900/90 border-b border-gray-800 px-4 py-2.5 flex justify-between items-center z-10 shrink-0">
+    <div class="flex items-center gap-2">
+      <span class="bg-rose-500/20 text-rose-400 border border-rose-500/30 text-[11px] px-2 py-0.5 rounded font-black">STAGE</span>
+      <span id="txt-stage" class="font-extrabold text-white text-base">1</span>
+      <span id="txt-boss-badge" class="hidden text-[10px] bg-red-600 text-white px-1.5 py-0.5 rounded font-black animate-pulse">BOSS</span>
+    </div>
+
+    <!-- Currencies -->
+    <div class="flex items-center gap-2.5 text-xs font-extrabold">
+      <div class="flex items-center gap-1 text-amber-400">
+        <span>💰</span><span id="txt-gold">0</span>
+      </div>
+      <div class="flex items-center gap-1 text-cyan-400">
+        <span>💎</span><span id="txt-gem">0</span>
+      </div>
+      <div class="flex items-center gap-1 text-purple-400">
+        <span>🔮</span><span id="txt-soul">0</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- 3. BATTLE ARENA -->
+  <main id="battle-field" class="relative flex-1 bg-gradient-to-b from-slate-950 via-gray-900 to-gray-950 flex flex-col justify-between p-4 overflow-hidden">
+    
+    <!-- Characters (Hero vs Mob) -->
+    <div class="flex justify-around items-center w-full my-auto py-2">
+      <!-- Hero Avatar & Name -->
+      <div class="flex flex-col items-center">
+        <div class="relative">
+          <img id="img-hero" src="" class="w-20 h-20 rounded-full border-2 border-indigo-500 object-cover shadow-lg shadow-indigo-500/20">
+        </div>
+        <div class="mt-2 text-center">
+          <div id="txt-hero-name" class="text-sm font-extrabold text-white">용사</div>
+        </div>
+      </div>
+
+      <!-- VS Badge -->
+      <div class="text-rose-500/80 font-black italic text-base">VS</div>
+
+      <!-- Mob Avatar & HP -->
+      <div id="mob-container" class="flex flex-col items-center relative">
+        <div id="txt-mob-emoji" class="text-7xl filter drop-shadow-2xl transition-transform duration-75">👾</div>
+        <div class="mt-2 w-28 text-center">
+          <div id="txt-mob-name" class="text-xs font-bold text-gray-200">몬스터</div>
+          <div id="txt-mob-status" class="text-[10px] font-extrabold text-sky-300 h-4 mt-0.5">패턴 분석 중</div>
+          <div class="w-full bg-gray-800 h-2 rounded-full overflow-hidden mt-1 border border-gray-700">
+            <div id="mob-hp-fill" class="bg-rose-500 h-full w-full transition-all duration-75"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Skill Hotbar & Control Buttons -->
+    <div class="w-full flex flex-col gap-2.5">
+      <!-- Equipped Skills Slot (Max 2) -->
+      <div class="flex justify-center gap-3">
+        <!-- Skill Slot 1 -->
+        <button id="skill-slot-0" onclick="useSkillSlot(0)" class="w-12 h-12 rounded-xl bg-gray-900 border border-gray-700 flex flex-col items-center justify-center relative shadow active:scale-95 disabled:opacity-40">
+          <span id="skill-icon-0" class="text-xl">🔒</span>
+          <div id="skill-cd-0" class="hidden absolute inset-0 bg-black/80 rounded-xl flex items-center justify-center font-black text-xs text-rose-400">0s</div>
+        </button>
+        <!-- Skill Slot 2 -->
+        <button id="skill-slot-1" onclick="useSkillSlot(1)" class="w-12 h-12 rounded-xl bg-gray-900 border border-gray-700 flex flex-col items-center justify-center relative shadow active:scale-95 disabled:opacity-40">
+          <span id="skill-icon-1" class="text-xl">🔒</span>
+          <div id="skill-cd-1" class="hidden absolute inset-0 bg-black/80 rounded-xl flex items-center justify-center font-black text-xs text-rose-400">0s</div>
+        </button>
+      </div>
+
+      <!-- Main Attack & Auto Attack -->
+      <div class="flex gap-2 w-full">
+        <button onclick="tapAttack()" class="flex-1 py-3.5 bg-gradient-to-r from-rose-600 to-rose-500 active:from-rose-700 text-white font-black text-base rounded-xl shadow-lg transition-transform active:scale-95 border-b-4 border-rose-800">
+          ⚔️ 공격하기
+        </button>
+        <button id="btn-auto" onclick="toggleAuto()" class="w-24 py-3.5 bg-gray-800 text-gray-300 font-extrabold text-xs rounded-xl border border-gray-700 active:scale-95">
+          자동 OFF
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- 4. BOTTOM TABS SYSTEM -->
+  <footer class="h-[46%] bg-gray-900 border-t border-gray-800 flex flex-col shrink-0">
+    <!-- Navigation Buttons -->
+    <div class="flex border-b border-gray-800 bg-gray-950/60 shrink-0">
+      <button onclick="switchTab('stat')" id="tab-btn-stat" class="tab-btn flex-1 py-3 text-xs font-bold text-indigo-400 border-b-2 border-indigo-500">🔥 강화</button>
+      <button onclick="switchTab('skill')" id="tab-btn-skill" class="tab-btn flex-1 py-3 text-xs font-bold text-gray-400 border-b-2 border-transparent">⚡ 스킬</button>
+      <button onclick="switchTab('rebirth')" id="tab-btn-rebirth" class="tab-btn flex-1 py-3 text-xs font-bold text-gray-400 border-b-2 border-transparent">🔮 환생</button>
+      <button onclick="switchTab('quest')" id="tab-btn-quest" class="tab-btn flex-1 py-3 text-xs font-bold text-gray-400 border-b-2 border-transparent">📜 미션</button>
+    </div>
+
+    <!-- Tab Contents Container -->
+    <div class="flex-1 overflow-y-auto p-3">
+      
+      <!-- TAB 1: GOLD STAT UPGRADES -->
+      <div id="tab-content-stat" class="tab-content flex flex-col gap-2">
+        <!-- Attack Power -->
+        <div class="flex justify-between items-center bg-gray-950/60 p-2.5 rounded-xl border border-gray-800">
+          <div>
+            <div class="text-xs font-bold text-white">⚔️ 공격력</div>
+            <div class="text-[10px] text-gray-400">Lv.<span id="lvl-atk">0</span> (+<span id="stat-atk-val">0</span>)</div>
+          </div>
+            <button onclick="buyGoldUpgrade('atk')" class="upgrade-buy px-3 py-1.5 bg-gray-800 hover:bg-gray-700 text-amber-300 border border-gray-700 font-extrabold text-xs rounded-lg active:scale-95">
+            💰 <span id="cost-atk">10</span>
+          </button>
+        </div>
+
+        <!-- Gold Multiplier -->
+        <div class="flex justify-between items-center bg-gray-950/60 p-2.5 rounded-xl border border-gray-800">
+          <div>
+            <div class="text-xs font-bold text-white">🍀 골드 획득량</div>
+            <div class="text-[10px] text-gray-400">Lv.<span id="lvl-gold">0</span> (+<span id="stat-gold-val">0</span>%)</div>
+          </div>
+          <button onclick="buyGoldUpgrade('gold')" class="upgrade-buy px-3 py-1.5 bg-gray-800 hover:bg-gray-700 text-amber-300 border border-gray-700 font-extrabold text-xs rounded-lg active:scale-95">
+            💰 <span id="cost-gold">20</span>
+          </button>
+        </div>
+
+        <!-- Crit Damage -->
+        <div class="flex justify-between items-center bg-gray-950/60 p-2.5 rounded-xl border border-gray-800">
+          <div>
+            <div class="text-xs font-bold text-white">💥 치명타 피해</div>
+            <div class="text-[10px] text-gray-400">Lv.<span id="lvl-critDmg">0</span> (<span id="stat-critDmg-val">150</span>%)</div>
+          </div>
+            <button onclick="buyGoldUpgrade('critDmg')" class="upgrade-buy px-3 py-1.5 bg-gray-800 hover:bg-gray-700 text-amber-300 border border-gray-700 font-extrabold text-xs rounded-lg active:scale-95">
+            💰 <span id="cost-critDmg">25</span>
+          </button>
+        </div>
+
+        <!-- Crit Rate -->
+        <div class="flex justify-between items-center bg-gray-950/60 p-2.5 rounded-xl border border-gray-800">
+          <div>
+            <div class="text-xs font-bold text-white">🎯 치명타 확률</div>
+            <div class="text-[10px] text-gray-400">Lv.<span id="lvl-critRate">0</span> (<span id="stat-critRate-val">5</span>%)</div>
+          </div>
+          <button onclick="buyGoldUpgrade('critRate')" class="upgrade-buy px-3 py-1.5 bg-gray-800 hover:bg-gray-700 text-amber-300 border border-gray-700 font-extrabold text-xs rounded-lg active:scale-95">
+            💰 <span id="cost-critRate">30</span>
+          </button>
+        </div>
+
+        <!-- Auto Attack Speed -->
+        <div class="flex justify-between items-center bg-gray-950/60 p-2.5 rounded-xl border border-gray-800">
+          <div>
+            <div class="text-xs font-bold text-white">⚡ 공격 속도</div>
+            <div class="text-[10px] text-gray-400">Lv.<span id="lvl-autoSpd">0</span> (<span id="stat-autoSpd-val">1.80</span>s)</div>
+          </div>
+          <button onclick="buyGoldUpgrade('autoSpd')" class="upgrade-buy px-3 py-1.5 bg-gray-800 hover:bg-gray-700 text-amber-300 border border-gray-700 font-extrabold text-xs rounded-lg active:scale-95">
+            💰 <span id="cost-autoSpd">50</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- TAB 2: SKILL SHOP -->
+      <div id="tab-content-skill" class="tab-content hidden flex flex-col gap-2">
+        <div id="skill-shop-list" class="flex flex-col gap-2">
+          <!-- Dynamically Rendered Skill Cards -->
+        </div>
+      </div>
+
+      <!-- TAB 3: REBIRTH (SOUL SHOP) -->
+      <div id="tab-content-rebirth" class="tab-content hidden flex flex-col gap-2.5">
+        <div class="bg-purple-950/40 border border-purple-800/40 p-2.5 rounded-xl text-center">
+          <div class="text-xs font-extrabold text-purple-300">🔮 차원 환생</div>
+          <div class="text-[10px] text-gray-400 mt-0.5">스테이지 및 골드 초기화, 영혼 획득</div>
+          <div class="text-xs font-black text-amber-400 mt-1">획득예정: +<span id="txt-pending-souls">0</span> 🔮</div>
+          <button onclick="doRebirth()" class="mt-1.5 w-full py-1.5 bg-purple-600 hover:bg-purple-500 text-white font-extrabold text-xs rounded-lg shadow active:scale-95">
+            환생 진행하기
+          </button>
+        </div>
+
+        <div class="text-xs font-extrabold text-gray-300">영통 특성 강화</div>
+        <div class="flex flex-col gap-2">
+          <!-- Permanent Atk -->
+          <div class="flex justify-between items-center bg-gray-950/60 p-2.5 rounded-xl border border-gray-800">
+            <div>
+              <div class="text-xs font-bold text-white">🗡️ 영구 공격력</div>
+              <div class="text-[10px] text-gray-400">Lv.<span id="lvl-soul-atk">0</span> (+<span id="bonus-soul-atk">0</span>%)</div>
+            </div>
+            <button onclick="buySoulUpgrade('atk', 1)" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white font-extrabold text-xs rounded-lg active:scale-95">
+              1 🔮
+            </button>
+          </div>
+
+          <!-- Permanent Gold -->
+          <div class="flex justify-between items-center bg-gray-950/60 p-2.5 rounded-xl border border-gray-800">
+            <div>
+              <div class="text-xs font-bold text-white">💰 영구 골드증가</div>
+              <div class="text-[10px] text-gray-400">Lv.<span id="lvl-soul-gold">0</span> (+<span id="bonus-soul-gold">0</span>%)</div>
+            </div>
+            <button onclick="buySoulUpgrade('gold', 1)" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white font-extrabold text-xs rounded-lg active:scale-95">
+              1 🔮
+            </button>
+          </div>
+
+          <!-- Boss Slayer -->
+          <div class="flex justify-between items-center bg-gray-950/60 p-2.5 rounded-xl border border-gray-800">
+            <div>
+              <div class="text-xs font-bold text-white">🎯 보스 처단자</div>
+              <div class="text-[10px] text-gray-400">보스 몬스터 상대 피해량 +50% (<span id="status-bossDmg">미습득</span>)</div>
+            </div>
+            <button onclick="buySoulPerk('bossDmg', 15)" id="btn-soul-bossDmg" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white font-extrabold text-xs rounded-lg active:scale-95">
+              15 🔮
+            </button>
+          </div>
+
+          <!-- Double Hit Perk -->
+          <div class="flex justify-between items-center bg-gray-950/60 p-2.5 rounded-xl border border-gray-800">
+            <div>
+              <div class="text-xs font-bold text-amber-300">⚡ 이중 타격</div>
+              <div class="text-[10px] text-gray-400">공격 시 2회 연속 타격 발동 (<span id="status-doubleHit">미습득</span>)</div>
+            </div>
+            <button onclick="buySoulPerk('doubleHit', 20)" id="btn-soul-doubleHit" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white font-extrabold text-xs rounded-lg active:scale-95">
+              20 🔮
+            </button>
+          </div>
+
+          <!-- Auto Skill -->
+          <div class="flex justify-between items-center bg-gray-950/60 p-2.5 rounded-xl border border-gray-800">
+            <div>
+              <div class="text-xs font-bold text-cyan-300">🤖 전술 오토캐스트</div>
+              <div class="text-[10px] text-gray-400">장착 스킬을 쿨다운마다 자동 사용 (<span id="status-autoSkill">미습득</span>)</div>
+            </div>
+            <button onclick="buySoulPerk('autoSkill', 80)" id="btn-soul-autoSkill" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white font-extrabold text-xs rounded-lg active:scale-95">
+              80 🔮
+            </button>
+          </div>
+
+          <!-- Auto Upgrade -->
+          <div class="flex justify-between items-center bg-gray-950/60 p-2.5 rounded-xl border border-gray-800">
+            <div>
+              <div class="text-xs font-bold text-cyan-300">🧠 초월 자동 강화</div>
+              <div class="text-[10px] text-gray-400">골드가 모이면 강화 자동 구매 (<span id="status-autoUpgrade">미습득</span>)</div>
+            </div>
+            <button onclick="buySoulPerk('autoUpgrade', 120)" id="btn-soul-autoUpgrade" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white font-extrabold text-xs rounded-lg active:scale-95">
+              120 🔮
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 4: REPEATABLE MISSIONS -->
+      <div id="tab-content-quest" class="tab-content hidden flex flex-col gap-2">
+        <div id="quest-list" class="flex flex-col gap-2">
+          <!-- Dynamically generated quests -->
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- CUSTOM MODAL NOTIFICATION -->
+  <div id="custom-modal" class="hidden absolute inset-0 bg-black/80 z-50 flex items-center justify-center p-6">
+    <div class="bg-gray-900 border border-gray-800 w-full max-w-xs rounded-2xl p-5 text-center shadow-2xl">
+      <h3 id="modal-title" class="text-base font-extrabold text-white">알림</h3>
+      <p id="modal-msg" class="text-xs text-gray-300 mt-2">메시지 내용</p>
+      <div id="modal-btns" class="mt-4 flex gap-2">
+        <button onclick="closeModal()" class="flex-1 py-2 bg-indigo-600 text-white font-bold text-xs rounded-lg">확인</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const HERO_NAMES = ["강해진","차은우","이도현","김우빈","송강","안효섭","남주혁","박보검","황민현","로운"];
+  
+  const MONSTERS = [
+    { name: "슬라임", emoji: "🟢", hp: 35, gold: 12 },
+    { name: "고블린", emoji: "👺", hp: 100, gold: 30 },
+    { name: "야생 늑대", emoji: "🐺", hp: 280, gold: 75 },
+    { name: "오크 전사", emoji: "👹", hp: 700, gold: 180 },
+    { name: "골렘", emoji: "🗿", hp: 1800, gold: 450 },
+    { name: "박쥐 떼", emoji: "🦇", hp: 95, gold: 36 },
+    { name: "해골 병사", emoji: "💀", hp: 330, gold: 92 },
+    { name: "독거미", emoji: "🕷️", hp: 520, gold: 140 },
+    { name: "미믹 상자", emoji: "🧰", hp: 850, gold: 310 },
+    { name: "빙결 마녀", emoji: "🧙", hp: 1300, gold: 390 },
+    { name: "사막 전갈", emoji: "🦂", hp: 2100, gold: 570 },
+    { name: "심해 크라켄", emoji: "🦑", hp: 3200, gold: 760 },
+    { name: "번개 정령", emoji: "⚡", hp: 4100, gold: 900 },
+    { name: "저주받은 기사", emoji: "🛡️", hp: 5600, gold: 1100 },
+    { name: "화염 드래곤", emoji: "🐉", hp: 7200, gold: 1500 },
+    { name: "공허의 눈", emoji: "👁️", hp: 9200, gold: 1900 },
+    { name: "천공의 사자", emoji: "🦁", hp: 12000, gold: 2500 }
+  ];
+
+  const PATTERN_START_STAGE = 10;
+  const TIME_WARP_DAMAGE_MULTIPLIER = 2;
+  const ATTACK_SKILL_DAMAGE_MULTIPLIER = 10;
+
+  const SKILL_SHOP = [
+    {
+      id: "time_warp",
+      name: "⏱️ 시공간 왜곡",
+      desc: "1.5초간 12회 난무 연격을 퍼붓습니다.",
+      priceGem: 200,
+      cd: 12,
+      action: () => {
+        playSkillEffect('skill-burst');
+        let count = 0;
+        let t = setInterval(() => {
+          tapAttack(true, true, TIME_WARP_DAMAGE_MULTIPLIER);
+          count++;
+          if (count >= 12) clearInterval(t);
+        }, 100);
+      }
+    },
+    {
+      id: "power_surge",
+      name: "⚔️ 힘의 폭발",
+      desc: "10초 동안 공격력이 2배가 됩니다.",
+      priceGem: 80,
+      cd: 20,
+      action: () => {
+        activateSkillBuff('attack', 10000, 2);
+        playSkillEffect('skill-power');
+        showDmgText('ATTACK ×2', true);
+      }
+    },
+    {
+      id: "overclock",
+      name: "⏩ 오버클럭",
+      desc: "12초 동안 자동 공격 속도가 2배가 됩니다.",
+      priceGem: 100,
+      cd: 25,
+      action: () => {
+        activateSkillBuff('autoSpeed', 12000, 0.5);
+        playSkillEffect('skill-haste');
+        showDmgText('AUTO SPEED UP!', true);
+      }
+    },
+    {
+      id: "gold_rush",
+      name: "💰 골드 러시",
+      desc: "15초 동안 몬스터 처치 골드가 2배가 됩니다.",
+      priceGem: 120,
+      cd: 30,
+      action: () => {
+        activateSkillBuff('gold', 15000, 2);
+        playSkillEffect('skill-gold');
+        showDmgText('GOLD ×2', true);
+      }
+    },
+    {
+      id: "frost_bind",
+      name: "❄️ 빙결 결박",
+      desc: "적을 4초간 얼려 가드를 끊고, 그동안 방어 패턴을 멈춥니다.",
+      priceGem: 450,
+      cd: 18,
+      action: () => {
+        if (!currentMob) return;
+        currentMob.frozenUntil = Date.now() + 4000;
+        currentMob.blocking = false;
+        playSkillEffect('freeze-flash');
+        showDmgText('FREEZE!', true);
+        updateMobStatus();
+      }
+    },
+    {
+      id: "meteor",
+      name: "☄️ 메테오 스트라이크",
+      desc: "현재 공격력의 120배에 달하는 폭딜을 가합니다.",
+      priceGem: 1200,
+      cd: 30,
+      action: () => {
+        if (currentMob) {
+          skillDamage(12, 'METEOR!', 'skill-burst');
+        }
+      }
+    }
+    ,
+    {
+      id: "thunder_chain",
+      name: "⚡ 천둥 연쇄",
+      desc: "번개가 3번 튀며 강한 연쇄 피해를 줍니다.",
+      priceGem: 650,
+      cd: 22,
+      action: () => {
+        let count = 0;
+        const timer = setInterval(() => {
+          skillDamage(1.35, '⚡ CHAIN', 'skill-thunder');
+          count++;
+          if (count >= 3) clearInterval(timer);
+        }, 170);
+      }
+    },
+    {
+      id: "venom_burst",
+      name: "☣️ 맹독 확산",
+      desc: "독이 퍼져 5초 동안 6번 지속 피해를 줍니다.",
+      priceGem: 800,
+      cd: 26,
+      action: () => {
+        let count = 0;
+        const timer = setInterval(() => {
+          skillDamage(0.65, '☣️ POISON', 'skill-poison');
+          count++;
+          if (count >= 6) clearInterval(timer);
+        }, 800);
+      }
+    },
+    {
+      id: "shadow_barrage",
+      name: "🌑 그림자 난무",
+      desc: "그림자 칼날 6개가 빠르게 적을 관통합니다.",
+      priceGem: 900,
+      cd: 25,
+      action: () => {
+        let count = 0;
+        const timer = setInterval(() => {
+          skillDamage(0.72, '🌑 SHADOW', 'skill-shadow');
+          count++;
+          if (count >= 6) clearInterval(timer);
+        }, 95);
+      }
+    },
+    {
+      id: "earth_breaker",
+      name: "🌋 대지 분쇄",
+      desc: "지면을 깨뜨려 큰 피해를 주고 적의 방어를 3초 봉쇄합니다.",
+      priceGem: 1100,
+      cd: 32,
+      action: () => {
+        if (!currentMob) return;
+        currentMob.blocking = false;
+        currentMob.nextBlockAt = Date.now() + 3000;
+        skillDamage(3.2, '🌋 BREAK!', 'skill-quake');
+        updateMobStatus();
+      }
+    },
+    {
+      id: "wind_cutter",
+      name: "🌪️ 질풍 참격",
+      desc: "바람을 두른 검격으로 4회 연속 베어냅니다.",
+      priceGem: 1300,
+      cd: 28,
+      action: () => {
+        let count = 0;
+        const timer = setInterval(() => {
+          skillDamage(1.05, '🌪️ CUT', 'skill-wind');
+          count++;
+          if (count >= 4) clearInterval(timer);
+        }, 130);
+      }
+    }
+  ];
+
+  let game = {
+    hero: {
+      name: "",
+      avatar: "",
+    },
+    upgrades: {
+      atk: 0,
+      critRate: 0,
+      critDmg: 0,
+      autoSpd: 0,
+      gold: 0
+    },
+    currencies: {
+      gold: 0,
+      gem: 0,
+      soul: 0
+    },
+    stage: 1,
+    autoAttack: false,
+    
+    unlockedSkills: [],
+    equippedSkills: [null, null],
+    skillCDs: {},
+    skillBuffs: {
+      attackUntil: 0,
+      attackMultiplier: 1,
+      autoSpeedUntil: 0,
+      autoSpeedMultiplier: 1,
+      goldUntil: 0,
+      goldMultiplier: 1
+    },
+    
+    soulUpgrades: {
+      atk: 0,
+      gold: 0,
+      doubleHit: false,
+      bossDmg: false,
+      autoSkill: false,
+      autoUpgrade: false
+    },
+
+    quests: {
+      totalKills: 0,
+      totalTaps: 0,
+      claimed: {}
+    }
+  };
+
+  let currentMob = null;
+  let autoTimer = null;
+  let mobPatternTimer = null;
+  let skillBuffTimers = {};
+  let autoSkillTimer = null;
+  let autoUpgradeTimer = null;
+  let selectingSkillId = null;
+
+  function saveGame() {
+    localStorage.setItem('HERO_RAISE_M_SAVE_V2', JSON.stringify(game));
+  }
+
+  function loadGame() {
+    const saved = localStorage.getItem('HERO_RAISE_M_SAVE_V2');
+    if (saved) {
+      try {
+        game = JSON.parse(saved);
+        game.skillBuffs = game.skillBuffs || {};
+        game.soulUpgrades.autoSkill = game.soulUpgrades.autoSkill || false;
+        game.soulUpgrades.autoUpgrade = game.soulUpgrades.autoUpgrade || false;
+        if (game.pendingHeroReroll) {
+          document.getElementById('gacha-screen').classList.remove('hidden');
+          setTimeout(startGachaSpin, 250);
+          return true;
+        }
+        document.getElementById('gacha-screen').classList.add('hidden');
+        initGame();
+        return true;
+      } catch(e) { console.error(e); }
+    }
+    return false;
+  }
+
+  function startGachaSpin() {
+    const btn = document.getElementById('btn-spin');
+    const reelBox = document.getElementById('reel-box');
+    const reelText = document.getElementById('reel-text');
+    const avatarWrapper = document.getElementById('hero-avatar-wrapper');
+    const avatarImg = document.getElementById('gacha-avatar-img');
+    const loadingBox = document.getElementById('gacha-loading');
+    const loadingBar = document.getElementById('loading-bar');
+    const loadingPct = document.getElementById('loading-pct');
+
+    btn.disabled = true;
+    btn.classList.add('opacity-50');
+    reelBox.classList.add('reel-spinning');
+
+    let count = 0;
+    let spinTimer = setInterval(() => {
+      reelText.innerText = HERO_NAMES[Math.floor(Math.random() * HERO_NAMES.length)];
+      count++;
+
+      if (count > 20) {
+        clearInterval(spinTimer);
+        reelBox.classList.remove('reel-spinning');
+        reelBox.classList.add('reel-braking');
+
+        const finalName = reelText.innerText;
+        game.hero.name = finalName;
+        game.hero.avatar = `https://i.pravatar.cc/150?u=${encodeURIComponent(finalName + Math.random())}`;
+
+        reelBox.classList.add('reel-shifted');
+
+        setTimeout(() => {
+          reelBox.classList.remove('reel-braking');
+          reelBox.classList.add('reel-winner');
+          avatarImg.src = game.hero.avatar;
+          avatarWrapper.classList.remove('hidden');
+
+          setTimeout(() => {
+            loadingBox.classList.remove('hidden');
+            let progress = 0;
+            let syncTimer = setInterval(() => {
+              progress += 10;
+              loadingBar.style.width = `${progress}%`;
+              loadingPct.innerText = `${progress}%`;
+
+              if (progress >= 100) {
+                clearInterval(syncTimer);
+                setTimeout(() => {
+                  game.pendingHeroReroll = false;
+                  document.getElementById('gacha-screen').classList.add('hidden');
+                  initGame();
+                  saveGame();
+                }, 200);
+              }
+            }, 60);
+          }, 300);
+
+        }, 250);
+      }
+    }, 60);
+  }
+
+  function initGame() {
+    spawnMob();
+    renderSkillShop();
+    updateUI();
+    syncSkillBuffs();
+    restartAutoAttackLoop();
+    restartAutoSkillLoop();
+    restartAutoUpgradeLoop();
+
+    if (!mobPatternTimer) {
+      mobPatternTimer = setInterval(updateMobPattern, 100);
+    }
+
+    // Skill cooldown tick loop
+    setInterval(() => {
+      for (let skId in game.skillCDs) {
+        if (game.skillCDs[skId] > 0) {
+          game.skillCDs[skId] = Math.max(0, game.skillCDs[skId] - 0.1);
+        }
+      }
+      updateSkillSlotsUI();
+    }, 100);
+
+    setInterval(saveGame, 5000);
+  }
+
+  function spawnMob() {
+    const isBoss = (game.stage % 5 === 0);
+    const mobIndex = (game.stage - 1) % MONSTERS.length;
+    const baseMob = MONSTERS[mobIndex];
+    
+    const scale = Math.pow(1.28, game.stage - 1) * (isBoss ? 2.2 : 1.0);
+
+    currentMob = {
+      name: isBoss ? `🔥 [BOSS] ${baseMob.name}` : baseMob.name,
+      emoji: baseMob.emoji,
+      maxHp: Math.floor(baseMob.hp * scale),
+      hp: Math.floor(baseMob.hp * scale),
+      gold: Math.floor(baseMob.gold * scale),
+      isBoss: isBoss,
+      patternsEnabled: game.stage >= PATTERN_START_STAGE,
+      blocking: false,
+      blockUntil: 0,
+      nextBlockAt: game.stage >= PATTERN_START_STAGE ? Date.now() + 3200 + Math.random() * 1800 : 0,
+      frozenUntil: 0
+    };
+
+    document.getElementById('txt-mob-name').innerText = currentMob.name;
+    document.getElementById('txt-mob-emoji').innerText = currentMob.emoji;
+    document.getElementById('txt-boss-badge').classList.toggle('hidden', !isBoss);
+    updateMobStatus();
+
+    updateUI();
+  }
+
+  function updateMobPattern() {
+    if (!currentMob) return;
+    if (!currentMob.patternsEnabled) {
+      currentMob.blocking = false;
+      updateMobStatus();
+      return;
+    }
+    const now = Date.now();
+    if (currentMob.frozenUntil > now) {
+      currentMob.blocking = false;
+    } else if (currentMob.blocking && currentMob.blockUntil <= now) {
+      currentMob.blocking = false;
+      currentMob.nextBlockAt = now + 3200 + Math.random() * 1800;
+    } else if (!currentMob.blocking && currentMob.nextBlockAt <= now) {
+      currentMob.blocking = true;
+      currentMob.blockUntil = now + 1600;
+    }
+    updateMobStatus();
+  }
+
+  function updateMobStatus() {
+    if (!currentMob) return;
+    const mobEmoji = document.getElementById('txt-mob-emoji');
+    const status = document.getElementById('txt-mob-status');
+    const now = Date.now();
+    const isFrozen = currentMob.frozenUntil > now;
+    mobEmoji.classList.toggle('mob-blocking', currentMob.blocking && !isFrozen);
+    mobEmoji.classList.toggle('mob-frozen', isFrozen);
+    if (isFrozen) {
+      status.innerText = `❄️ 빙결 ${Math.ceil((currentMob.frozenUntil - now) / 1000)}초`;
+      status.className = 'text-[10px] font-extrabold text-cyan-300 h-4 mt-0.5';
+    } else if (currentMob.blocking) {
+      status.innerText = '🛡️ 방어 태세 · 피해 감소';
+      status.className = 'text-[10px] font-extrabold text-sky-300 h-4 mt-0.5';
+    } else {
+      status.innerText = currentMob.patternsEnabled ? '공격 기회' : '';
+      status.className = 'text-[10px] font-extrabold text-emerald-300 h-4 mt-0.5';
+    }
+  }
+
+  function playSkillEffect(className) {
+    const mobEmoji = document.getElementById('txt-mob-emoji');
+    mobEmoji.classList.remove(className);
+    void mobEmoji.offsetWidth;
+    mobEmoji.classList.add(className);
+    if (className !== 'mob-frozen') {
+      setTimeout(() => mobEmoji.classList.remove(className), 700);
+    }
+  }
+
+  function getSkillBuffState() {
+    game.skillBuffs = game.skillBuffs || {};
+    const defaults = {
+      attackUntil: 0,
+      attackMultiplier: 1,
+      autoSpeedUntil: 0,
+      autoSpeedMultiplier: 1,
+      goldUntil: 0,
+      goldMultiplier: 1
+    };
+    Object.keys(defaults).forEach(key => {
+      if (game.skillBuffs[key] === undefined) game.skillBuffs[key] = defaults[key];
+    });
+    return game.skillBuffs;
+  }
+
+  function activateSkillBuff(type, duration, multiplier) {
+    const buffs = getSkillBuffState();
+    const keyMap = {
+      attack: ['attackUntil', 'attackMultiplier'],
+      autoSpeed: ['autoSpeedUntil', 'autoSpeedMultiplier'],
+      gold: ['goldUntil', 'goldMultiplier']
+    };
+    const [untilKey, multiplierKey] = keyMap[type];
+    buffs[untilKey] = Date.now() + duration;
+    buffs[multiplierKey] = multiplier;
+
+    if (skillBuffTimers[type]) clearTimeout(skillBuffTimers[type]);
+    skillBuffTimers[type] = setTimeout(() => {
+      buffs[untilKey] = 0;
+      buffs[multiplierKey] = 1;
+      if (type === 'autoSpeed') restartAutoAttackLoop();
+      saveGame();
+    }, duration + 50);
+
+    if (type === 'autoSpeed') restartAutoAttackLoop();
+    saveGame();
+  }
+
+  function syncSkillBuffs() {
+    const buffs = getSkillBuffState();
+    const now = Date.now();
+    Object.entries({
+      attack: ['attackUntil', 'attackMultiplier'],
+      autoSpeed: ['autoSpeedUntil', 'autoSpeedMultiplier'],
+      gold: ['goldUntil', 'goldMultiplier']
+    }).forEach(([type, [untilKey, multiplierKey]]) => {
+      const remaining = buffs[untilKey] - now;
+      if (remaining > 0) {
+        if (type === 'autoSpeed') restartAutoAttackLoop();
+        skillBuffTimers[type] = setTimeout(() => {
+          buffs[untilKey] = 0;
+          buffs[multiplierKey] = 1;
+          if (type === 'autoSpeed') restartAutoAttackLoop();
+          saveGame();
+        }, remaining + 50);
+      } else {
+        buffs[untilKey] = 0;
+        buffs[multiplierKey] = 1;
+      }
+    });
+  }
+
+  function getBaseAttackPower() {
+    let baseAtk = 8 + (game.upgrades.atk * 3);
+    baseAtk *= 1 + (game.soulUpgrades.atk * 0.15);
+    const buffs = getSkillBuffState();
+    if (buffs.attackUntil > Date.now()) baseAtk *= buffs.attackMultiplier;
+    if (currentMob && currentMob.isBoss && game.soulUpgrades.bossDmg) {
+      baseAtk *= 1.5;
+    }
+    return baseAtk;
+  }
+
+  function skillDamage(multiplier, label, effectClass) {
+    if (!currentMob || currentMob.hp <= 0) return;
+    let damage = Math.max(1, Math.floor(getBaseAttackPower() * multiplier * ATTACK_SKILL_DAMAGE_MULTIPLIER));
+    if (currentMob.blocking && currentMob.frozenUntil <= Date.now()) {
+      damage = Math.max(1, Math.floor(damage * 0.15));
+      showDmgText('BLOCK', false);
+    }
+    playSkillEffect(effectClass);
+    currentMob.hp -= damage;
+    showDmgText(damage, true);
+    checkMobDefeat();
+    updateUI();
+  }
+
+  function tapAttack(isAuto = false, isExtraHit = false, damageMultiplier = 1) {
+    if (!currentMob || currentMob.hp <= 0) return;
+
+    if (!isAuto && !isExtraHit) game.quests.totalTaps++;
+
+    // Mob Shake animation
+    const mobEmoji = document.getElementById('txt-mob-emoji');
+    mobEmoji.classList.remove('hit-shake');
+    void mobEmoji.offsetWidth;
+    mobEmoji.classList.add('hit-shake');
+    setTimeout(() => mobEmoji.classList.remove('hit-shake'), 140);
+
+    // Stats calculation
+    let baseAtk = getBaseAttackPower();
+
+    // Crit Rate & Crit Dmg
+    let critChance = 0.05 + (game.upgrades.critRate * 0.005); // +0.5% per lv
+    let isCrit = Math.random() < critChance;
+    let critMultiplier = 1.5 + (game.upgrades.critDmg * 0.05); // +5% per lv
+    
+    let finalDmg = isCrit ? Math.floor(baseAtk * critMultiplier) : Math.floor(baseAtk);
+    finalDmg = Math.floor(finalDmg * damageMultiplier);
+
+    if (currentMob.blocking && currentMob.frozenUntil <= Date.now()) {
+      finalDmg = Math.max(1, Math.floor(finalDmg * 0.15));
+      showDmgText('BLOCK', false);
+    }
+
+    currentMob.hp -= finalDmg;
+    showDmgText(finalDmg, isCrit);
+
+    // Double Hit Perk Trigger
+    if (!isExtraHit && game.soulUpgrades.doubleHit) {
+      setTimeout(() => tapAttack(isAuto, true, damageMultiplier), 80);
+    }
+
+    checkMobDefeat();
+    updateUI();
+  }
+
+  function checkMobDefeat() {
+    if (currentMob && currentMob.hp <= 0) {
+      game.quests.totalKills++;
+
+      // Gold Reward
+      let goldMult = 1 + (game.upgrades.gold * 0.04) + (game.soulUpgrades.gold * 0.2);
+      const buffs = getSkillBuffState();
+      if (buffs.goldUntil > Date.now()) goldMult *= buffs.goldMultiplier;
+      let goldEarned = Math.floor(currentMob.gold * goldMult);
+      game.currencies.gold += goldEarned;
+
+      // Gem Reward
+      if (currentMob.isBoss) {
+        let bossGems = 15 + (game.stage * 3);
+        game.currencies.gem += bossGems;
+        showDmgText(`+${bossGems} 💎`, true);
+      } else if (Math.random() < 0.1) {
+        game.currencies.gem += 1;
+      }
+
+      game.stage++;
+      spawnMob();
+    }
+  }
+
+  function getGoldCost(type) {
+    const lv = game.upgrades[type];
+    const baseCosts = { atk: 10, critRate: 30, critDmg: 25, autoSpd: 50, gold: 20 };
+    const rates = { atk: 1.14, critRate: 1.18, critDmg: 1.15, autoSpd: 1.3, gold: 1.13 };
+    return Math.floor(baseCosts[type] * Math.pow(rates[type], lv));
+  }
+
+  function sortGoldUpgradeRows() {
+    const container = document.getElementById('tab-content-stat');
+    const rows = Array.from(container.children);
+    const baseCosts = { atk: 10, gold: 20, critDmg: 25, critRate: 30, autoSpd: 50 };
+    rows.sort((a, b) => {
+      const getType = row => {
+        const button = row.querySelector('button[onclick]');
+        const match = button && button.getAttribute('onclick').match(/buyGoldUpgrade\('([^']+)'\)/);
+        return match ? match[1] : '';
+      };
+      return baseCosts[getType(a)] - baseCosts[getType(b)];
+    });
+    rows.forEach(row => container.appendChild(row));
+  }
+
+  function updateGoldUpgradeHighlights() {
+    document.querySelectorAll('#tab-content-stat button[onclick]').forEach(button => {
+      const match = button.getAttribute('onclick').match(/buyGoldUpgrade\('([^']+)'\)/);
+      if (!match) return;
+      const canBuy = game.currencies.gold >= getGoldCost(match[1]);
+      button.classList.toggle('upgrade-available', canBuy);
+      button.classList.toggle('bg-amber-400', canBuy);
+      button.classList.toggle('text-gray-950', canBuy);
+      button.classList.toggle('border-amber-300', canBuy);
+      button.classList.toggle('ring-2', canBuy);
+      button.classList.toggle('ring-amber-300\/50', canBuy);
+      button.classList.toggle('shadow-lg', canBuy);
+      button.classList.toggle('bg-gray-800', !canBuy);
+      button.classList.toggle('text-amber-300', !canBuy);
+      button.classList.toggle('border-gray-700', !canBuy);
+    });
+  }
+
+  function buyGoldUpgrade(type) {
+    const cost = getGoldCost(type);
+    if (game.currencies.gold >= cost) {
+      game.currencies.gold -= cost;
+      game.upgrades[type]++;
+      if (type === 'autoSpd') restartAutoAttackLoop();
+      updateUI();
+      saveGame();
+    } else {
+      showModal("골드 부족", "골드(💰)가 부족합니다.");
+    }
+  }
+
+  function getAutoInterval() {
+    // Base 1.8s down to min 0.2s
+    let sec = 1.8 - (game.upgrades.autoSpd * 0.08);
+    const buffs = getSkillBuffState();
+    if (buffs.autoSpeedUntil > Date.now()) sec *= buffs.autoSpeedMultiplier;
+    return Math.max(0.2, sec);
+  }
+
+  function restartAutoAttackLoop() {
+    if (autoTimer) clearInterval(autoTimer);
+    if (game.autoAttack) {
+      const intervalMs = Math.floor(getAutoInterval() * 1000);
+      autoTimer = setInterval(() => {
+        if (game.autoAttack) tapAttack(true);
+      }, intervalMs);
+    }
+  }
+
+  function restartAutoSkillLoop() {
+    if (autoSkillTimer) clearInterval(autoSkillTimer);
+    if (!game.soulUpgrades.autoSkill) return;
+    autoSkillTimer = setInterval(() => {
+      if (!currentMob || currentMob.hp <= 0) return;
+      const readySkill = game.equippedSkills
+        .map(skId => SKILL_SHOP.find(sk => sk.id === skId))
+        .find(sk => sk && (game.skillCDs[sk.id] || 0) <= 0);
+      if (readySkill) useSkillSlot(game.equippedSkills.indexOf(readySkill.id));
+    }, 500);
+  }
+
+  function restartAutoUpgradeLoop() {
+    if (autoUpgradeTimer) clearInterval(autoUpgradeTimer);
+    if (!game.soulUpgrades.autoUpgrade) return;
+    autoUpgradeTimer = setInterval(() => {
+      const upgradeTypes = ['atk', 'gold', 'critDmg', 'critRate', 'autoSpd'];
+      const affordableType = upgradeTypes
+        .filter(type => game.currencies.gold >= getGoldCost(type))
+        .sort((a, b) => getGoldCost(a) - getGoldCost(b))[0];
+      if (affordableType) buyGoldUpgrade(affordableType);
+    }, 1500);
+  }
+
+  function renderSkillShop() {
+    const list = document.getElementById('skill-shop-list');
+    list.innerHTML = '';
+
+    SKILL_SHOP.slice().sort((a, b) => a.priceGem - b.priceGem).forEach(sk => {
+      const isOwned = game.unlockedSkills.includes(sk.id);
+      const slotIndex = game.equippedSkills.indexOf(sk.id);
+      const isEquipped = slotIndex !== -1;
+
+      const card = document.createElement('div');
+      card.className = "flex justify-between items-center bg-gray-950/60 p-2.5 rounded-xl border border-gray-800";
+      
+      card.innerHTML = `
+        <div class="flex-1 pr-2">
+          <div class="text-xs font-bold text-white">${sk.name}</div>
+          <div class="text-[10px] text-gray-400 mt-0.5">${sk.desc}</div>
+        </div>
+        <div class="flex items-center gap-2">
+          ${!isOwned ? `
+            <button onclick="buySkill('${sk.id}')" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-black font-extrabold text-xs rounded-lg active:scale-95 flex items-center gap-1">
+              <span>💎</span>${sk.priceGem}
+            </button>
+          ` : `
+            <button onclick="toggleEquipSkill('${sk.id}')" class="px-3 py-1.5 ${isEquipped ? 'bg-rose-600' : 'bg-indigo-600'} text-white font-extrabold text-xs rounded-lg active:scale-95">
+              ${isEquipped ? `해제` : '장착'}
+            </button>
+          `}
+        </div>
+      `;
+      list.appendChild(card);
+    });
+  }
+
+  function buySkill(skId) {
+    const sk = SKILL_SHOP.find(s => s.id === skId);
+    if (!sk) return;
+
+    if (game.currencies.gem >= sk.priceGem) {
+      game.currencies.gem -= sk.priceGem;
+      game.unlockedSkills.push(skId);
+      
+      if (game.equippedSkills[0] === null) game.equippedSkills[0] = skId;
+      else if (game.equippedSkills[1] === null) game.equippedSkills[1] = skId;
+
+      renderSkillShop();
+      updateUI();
+      saveGame();
+      showModal("스킬 습득", `${sk.name} 스킬을 장착했습니다.`);
+    } else {
+      showModal("보석 부족", "보석(💎)이 부족합니다.");
+    }
+  }
+
+  function toggleEquipSkill(skId) {
+    const idx = game.equippedSkills.indexOf(skId);
+    if (idx !== -1) {
+      game.equippedSkills[idx] = null;
+    } else {
+      if (game.equippedSkills[0] === null) game.equippedSkills[0] = skId;
+      else if (game.equippedSkills[1] === null) game.equippedSkills[1] = skId;
+      else {
+        selectingSkillId = skId;
+        updateSkillSlotsUI();
+        return;
+      }
+    }
+    renderSkillShop();
+    updateSkillSlotsUI();
+    saveGame();
+  }
+
+  function useSkillSlot(slotIdx) {
+    if (selectingSkillId) {
+      game.equippedSkills[slotIdx] = selectingSkillId;
+      selectingSkillId = null;
+      renderSkillShop();
+      updateSkillSlotsUI();
+      saveGame();
+      return;
+    }
+
+    const skId = game.equippedSkills[slotIdx];
+    if (!skId) return;
+
+    const sk = SKILL_SHOP.find(s => s.id === skId);
+    if (!sk) return;
+
+    const cd = game.skillCDs[skId] || 0;
+    if (cd <= 0) {
+      game.skillCDs[skId] = sk.cd;
+      sk.action();
+      updateSkillSlotsUI();
+    }
+  }
+
+  function updateSkillSlotsUI() {
+    [0, 1].forEach(slotIdx => {
+      const skId = game.equippedSkills[slotIdx];
+      const slotBtn = document.getElementById(`skill-slot-${slotIdx}`);
+      const iconSpan = document.getElementById(`skill-icon-${slotIdx}`);
+      const cdBox = document.getElementById(`skill-cd-${slotIdx}`);
+
+      if (!skId) {
+        iconSpan.innerText = "🔒";
+        slotBtn.disabled = true;
+        slotBtn.classList.remove('skill-replace-target');
+        cdBox.classList.add('hidden');
+      } else {
+        const sk = SKILL_SHOP.find(s => s.id === skId);
+        iconSpan.innerText = sk.name.split(' ')[0];
+        slotBtn.disabled = false;
+        slotBtn.classList.toggle('skill-replace-target', Boolean(selectingSkillId));
+
+        const remainCD = game.skillCDs[skId] || 0;
+        if (remainCD > 0) {
+          cdBox.classList.remove('hidden');
+          cdBox.innerText = `${Math.ceil(remainCD)}s`;
+        } else {
+          cdBox.classList.add('hidden');
+        }
+      }
+    });
+  }
+
+  function buySoulPerk(perkKey, cost) {
+    if (game.soulUpgrades[perkKey]) {
+      showModal("습득 완료", "이미 습득한 특성입니다.");
+      return;
+    }
+    if (game.currencies.soul >= cost) {
+      game.currencies.soul -= cost;
+      game.soulUpgrades[perkKey] = true;
+      if (perkKey === 'autoSkill') restartAutoSkillLoop();
+      if (perkKey === 'autoUpgrade') restartAutoUpgradeLoop();
+      updateUI();
+      saveGame();
+      showModal("특성 해금", "새로운 영혼 특성이 활성화되었습니다.");
+    } else {
+      showModal("영혼 부족", "환생을 진행하여 영혼(🔮)을 획득하세요.");
+    }
+  }
+
+  function buySoulUpgrade(type, cost) {
+    if (game.currencies.soul >= cost) {
+      game.currencies.soul -= cost;
+      game.soulUpgrades[type]++;
+      updateUI();
+      saveGame();
+    } else {
+      showModal("영혼 부족", "영혼(🔮)이 부족합니다.");
+    }
+  }
+
+  function doRebirth() {
+    let pendingSouls = Math.floor(game.stage / 4);
+    if (pendingSouls <= 0) {
+      showModal("환생 불가", "4 스테이지 이상 진행해야 환생할 수 있습니다.");
+      return;
+    }
+
+    showModal("차원 환생", `환생 시 스테이지와 골드가 초기화되며 +${pendingSouls}🔮 영혼을 획득합니다.`, true, () => {
+      game.currencies.soul += pendingSouls;
+      game.currencies.gold = 0;
+      game.stage = 1;
+      game.autoAttack = false;
+      game.upgrades = {
+        atk: 0,
+        critRate: 0,
+        critDmg: 0,
+        autoSpd: 0,
+        gold: 0
+      };
+      game.skillBuffs = {
+        attackUntil: 0,
+        attackMultiplier: 1,
+        autoSpeedUntil: 0,
+        autoSpeedMultiplier: 1,
+        goldUntil: 0,
+        goldMultiplier: 1
+      };
+      game.unlockedSkills = [];
+      game.equippedSkills = [null, null];
+      game.skillCDs = {};
+      game.hero.name = '';
+      game.hero.avatar = '';
+      game.pendingHeroReroll = true;
+
+      saveGame();
+      location.reload();
+    });
+  }
+
+  function renderQuests() {
+    const qList = document.getElementById('quest-list');
+    qList.innerHTML = '';
+
+    const questData = [
+      { id: 'kill_10', title: '몬스터 10마리 처치', target: 10, current: game.quests.totalKills, reward: 30 },
+      { id: 'kill_50', title: '몬스터 50마리 처치', target: 50, current: game.quests.totalKills, reward: 100 },
+      { id: 'kill_200', title: '몬스터 200마리 처치', target: 200, current: game.quests.totalKills, reward: 300 },
+      { id: 'tap_50', title: '직접 공격 50회', target: 50, current: game.quests.totalTaps, reward: 30 },
+      { id: 'tap_200', title: '직접 공격 200회', target: 200, current: game.quests.totalTaps, reward: 150 }
+    ];
+
+    questData.forEach(q => {
+      const completedCount = Math.floor(q.current / q.target);
+      const claimedCount = Number(game.quests.claimed[q.id] || 0);
+      const availableCount = Math.max(0, completedCount - claimedCount);
+      const isDone = availableCount > 0;
+
+      const div = document.createElement('div');
+      div.className = "flex justify-between items-center bg-gray-950/60 p-2.5 rounded-xl border border-gray-800 text-xs";
+      
+      div.innerHTML = `
+        <div>
+          <div class="font-bold text-white">${q.title}</div>
+          <div class="text-[10px] text-gray-400">누적 ${q.current} · 달성 ${claimedCount}회</div>
+        </div>
+        <button id="btn-quest-${q.id}" 
+          class="px-3 py-1.5 rounded-lg font-bold transition active:scale-95 ${
+            isDone
+              ? 'bg-amber-500/90 text-gray-950 font-extrabold shadow' 
+              : 'bg-gray-800 text-gray-400 cursor-not-allowed'
+          }">
+          ${isDone ? `수령 +${q.reward * availableCount} 💎` : `진행 ${Math.min(q.current % q.target, q.target)} / ${q.target}`}
+        </button>
+      `;
+
+      qList.appendChild(div);
+
+      const btn = document.getElementById(`btn-quest-${q.id}`);
+      if (isDone) {
+        btn.onclick = () => claimQuest(q.id, q.reward);
+      } else {
+        btn.disabled = true;
+      }
+    });
+  }
+
+  function claimQuest(qId, reward) {
+    const target = {
+      kill_10: 10,
+      kill_50: 50,
+      kill_200: 200,
+      tap_50: 50,
+      tap_200: 200
+    }[qId];
+    const progress = qId.startsWith('kill') ? game.quests.totalKills : game.quests.totalTaps;
+    const claimedCount = Number(game.quests.claimed[qId] || 0);
+    const completedCount = Math.floor(progress / target);
+    const availableCount = Math.max(0, completedCount - claimedCount);
+    if (availableCount > 0) {
+      const totalReward = reward * availableCount;
+      game.quests.claimed[qId] = claimedCount + availableCount;
+      game.currencies.gem += totalReward;
+      renderQuests();
+      updateUI();
+      saveGame();
+      showMissionReward(qId, totalReward);
+    }
+  }
+
+  function showMissionReward(qId, amount) {
+    const button = document.getElementById(`btn-quest-${qId}`);
+    if (!button) return;
+    button.classList.add('relative');
+    const reward = document.createElement('span');
+    reward.className = 'mission-reward-float';
+    reward.innerText = `+${amount} 💎`;
+    button.appendChild(reward);
+    setTimeout(() => reward.remove(), 950);
+  }
+
+  function updateUI() {
+    document.getElementById('txt-stage').innerText = game.stage;
+    document.getElementById('txt-gold').innerText = game.currencies.gold.toLocaleString();
+    document.getElementById('txt-gem').innerText = game.currencies.gem.toLocaleString();
+    document.getElementById('txt-soul').innerText = game.currencies.soul.toLocaleString();
+
+    document.getElementById('txt-hero-name').innerText = game.hero.name || "용사";
+    document.getElementById('img-hero').src = game.hero.avatar || "";
+
+    // Upgrades UI
+    document.getElementById('lvl-atk').innerText = game.upgrades.atk;
+    document.getElementById('stat-atk-val').innerText = game.upgrades.atk * 3;
+    document.getElementById('cost-atk').innerText = getGoldCost('atk').toLocaleString();
+
+    document.getElementById('lvl-critRate').innerText = game.upgrades.critRate;
+    document.getElementById('stat-critRate-val').innerText = (5 + game.upgrades.critRate * 0.5).toFixed(1);
+    document.getElementById('cost-critRate').innerText = getGoldCost('critRate').toLocaleString();
+
+    document.getElementById('lvl-critDmg').innerText = game.upgrades.critDmg;
+    document.getElementById('stat-critDmg-val').innerText = (150 + game.upgrades.critDmg * 5);
+    document.getElementById('cost-critDmg').innerText = getGoldCost('critDmg').toLocaleString();
+
+    document.getElementById('lvl-autoSpd').innerText = game.upgrades.autoSpd;
+    document.getElementById('stat-autoSpd-val').innerText = getAutoInterval().toFixed(2);
+    document.getElementById('cost-autoSpd').innerText = getGoldCost('autoSpd').toLocaleString();
+
+    document.getElementById('lvl-gold').innerText = game.upgrades.gold;
+    document.getElementById('stat-gold-val').innerText = game.upgrades.gold * 4;
+    document.getElementById('cost-gold').innerText = getGoldCost('gold').toLocaleString();
+    sortGoldUpgradeRows();
+    updateGoldUpgradeHighlights();
+
+    // Mob HP Bar
+    if (currentMob) {
+      let hpPct = Math.max(0, (currentMob.hp / currentMob.maxHp) * 100);
+      document.getElementById('mob-hp-fill').style.width = `${hpPct}%`;
+    }
+
+    // Soul Perks
+    document.getElementById('txt-pending-souls').innerText = Math.floor(game.stage / 4);
+    document.getElementById('status-doubleHit').innerText = game.soulUpgrades.doubleHit ? "습득함" : "미습득";
+    document.getElementById('status-bossDmg').innerText = game.soulUpgrades.bossDmg ? "습득함" : "미습득";
+    document.getElementById('status-autoSkill').innerText = game.soulUpgrades.autoSkill ? "습득함" : "미습득";
+    document.getElementById('status-autoUpgrade').innerText = game.soulUpgrades.autoUpgrade ? "습득함" : "미습득";
+    
+    document.getElementById('lvl-soul-atk').innerText = game.soulUpgrades.atk;
+    document.getElementById('bonus-soul-atk').innerText = game.soulUpgrades.atk * 15;
+    document.getElementById('lvl-soul-gold').innerText = game.soulUpgrades.gold;
+    document.getElementById('bonus-soul-gold').innerText = game.soulUpgrades.gold * 20;
+
+    renderQuests();
+  }
+
+  function toggleAuto() {
+    game.autoAttack = !game.autoAttack;
+    const btn = document.getElementById('btn-auto');
+    if (game.autoAttack) {
+      btn.innerText = "자동 ON";
+      btn.classList.add('bg-emerald-600', 'text-white');
+      btn.classList.remove('bg-gray-800', 'text-gray-300');
+    } else {
+      btn.innerText = "자동 OFF";
+      btn.classList.add('bg-gray-800', 'text-gray-300');
+      btn.classList.remove('bg-emerald-600', 'text-white');
+    }
+    restartAutoAttackLoop();
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.tab-btn').forEach(b => {
+      b.classList.remove('text-indigo-400', 'border-indigo-500');
+      b.classList.add('text-gray-400', 'border-transparent');
+    });
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+
+    const activeBtn = document.getElementById(`tab-btn-${tabId}`);
+    activeBtn.classList.add('text-indigo-400', 'border-indigo-500');
+    activeBtn.classList.remove('text-gray-400', 'border-transparent');
+
+    document.getElementById(`tab-content-${tabId}`).classList.remove('hidden');
+  }
+
+  function showDmgText(text, isCrit = false) {
+    const mobContainer = document.getElementById('mob-container');
+    const pop = document.createElement('div');
+    pop.className = 'dmg-popup';
+    pop.innerText = text;
+    pop.style.color = isCrit ? '#fbbf24' : '#ffffff';
+    pop.style.fontSize = isCrit ? '22px' : '16px';
+    pop.style.left = `${Math.random() * 40 + 30}%`;
+    pop.style.top = `${Math.random() * 20}%`;
+
+    mobContainer.appendChild(pop);
+    setTimeout(() => pop.remove(), 550);
+  }
+
+  /* Custom Modal System */
+  let modalConfirmCallback = null;
+
+  function showModal(title, msg, showCancel = false, onConfirm = null) {
+    document.getElementById('modal-title').innerText = title;
+    document.getElementById('modal-msg').innerText = msg;
+    modalConfirmCallback = onConfirm;
+
+    const btns = document.getElementById('modal-btns');
+    btns.innerHTML = `
+      ${showCancel ? `<button onclick="closeModal()" class="flex-1 py-2 bg-gray-800 text-gray-300 font-bold text-xs rounded-lg">취소</button>` : ''}
+      <button onclick="confirmModal()" class="flex-1 py-2 bg-indigo-600 text-white font-bold text-xs rounded-lg">확인</button>
+    `;
+    document.getElementById('custom-modal').classList.remove('hidden');
+  }
+
+  function confirmModal() {
+    closeModal();
+    if (modalConfirmCallback) modalConfirmCallback();
+  }
+
+  function closeModal() {
+    document.getElementById('custom-modal').classList.add('hidden');
+  }
+
+  window.onload = () => {
+    if (!loadGame()) {
+      document.getElementById('gacha-screen').classList.remove('hidden');
+    }
+  };
+</script>
+</body>
+</html>
