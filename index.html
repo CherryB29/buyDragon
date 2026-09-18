@@ -236,6 +236,355 @@
       70% { transform: rotate(5deg) scale(1.08); }
       100% { filter: brightness(1); transform: rotate(0) scale(1); }
     }
+
+    #battle-fx {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 6;
+    }
+
+    .battle-fx-node {
+      position: absolute;
+      pointer-events: none;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      will-change: transform, opacity, filter;
+    }
+
+    .arena-solar { animation: arenaSolar 0.72s ease-out; }
+    .arena-cyan { animation: arenaCyan 0.6s ease-out; }
+    .arena-gold { animation: arenaGold 0.7s ease-out; }
+    .arena-frost { animation: arenaFrost 0.72s ease-out; }
+    .arena-thunder { animation: arenaThunder 0.45s ease-out; }
+    .arena-poison { animation: arenaPoison 0.8s ease-out; }
+    .arena-shadow { animation: arenaShadow 0.45s ease-out; }
+    .arena-quake { animation: arenaQuake 0.65s ease-out; }
+    .arena-wind { animation: arenaWind 0.28s ease-out; }
+    .arena-meteor { animation: arenaMeteor 0.9s ease-out; }
+    .arena-burn { animation: arenaBurn 0.38s ease-out; }
+    .arena-vitality { animation: arenaVitality 0.75s ease-out; }
+
+    .skill-meteor { animation: meteorStrike 0.9s cubic-bezier(0.2, 0.9, 0.15, 1); }
+    .skill-meteor-dot { animation: meteorBurn 0.36s ease-out; }
+    .skill-vitality { animation: vitalityPulse 0.7s ease-out; }
+
+    .fx-burst-ring {
+      width: 10rem;
+      height: 10rem;
+      border-radius: 999px;
+      border: 3px solid rgba(103, 232, 249, 0.75);
+      box-shadow: 0 0 24px rgba(34, 211, 238, 0.4), inset 0 0 24px rgba(103, 232, 249, 0.18);
+      animation: burstRing 0.68s ease-out forwards;
+    }
+
+    .fx-thunder-arc,
+    .fx-shadow-slash,
+    .fx-wind-slash,
+    .fx-haste-lines,
+    .fx-vitality-wave,
+    .fx-meteor-fall,
+    .fx-meteor-explosion,
+    .fx-burn-mark,
+    .fx-poison-cloud,
+    .fx-quake-ring,
+    .fx-freeze-crystal,
+    .fx-gold-shower,
+    .fx-power-surge {
+      transform-origin: center;
+    }
+
+    .fx-thunder-arc {
+      width: 1.15rem;
+      height: 7rem;
+      border-radius: 999px;
+      background: linear-gradient(180deg, rgba(255,255,255,0), rgba(253, 224, 71, 0.95), rgba(255,255,255,0));
+      filter: drop-shadow(0 0 18px rgba(250, 204, 21, 0.9));
+      animation: thunderArc 0.4s ease-out forwards;
+    }
+
+    .fx-shadow-slash,
+    .fx-wind-slash {
+      width: 6.5rem;
+      height: 1rem;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.92), rgba(255,255,255,0));
+    }
+
+    .fx-shadow-slash {
+      filter: drop-shadow(0 0 16px rgba(192, 132, 252, 0.95));
+      animation: shadowBlade 0.32s ease-out forwards;
+    }
+
+    .fx-wind-slash {
+      filter: drop-shadow(0 0 18px rgba(56, 189, 248, 0.95));
+      animation: windBlade 0.24s linear forwards;
+    }
+
+    .fx-haste-lines {
+      width: 90%;
+      height: 60%;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.4), rgba(34,211,238,0.85), rgba(255,255,255,0.05)),
+        linear-gradient(90deg, rgba(255,255,255,0), rgba(125,211,252,0.8), rgba(255,255,255,0));
+      mask: repeating-linear-gradient(180deg, transparent 0 12px, black 12px 17px);
+      animation: hasteLines 0.62s ease-out forwards;
+    }
+
+    .fx-vitality-wave {
+      width: 10rem;
+      height: 10rem;
+      border-radius: 999px;
+      border: 3px solid rgba(74, 222, 128, 0.9);
+      box-shadow: 0 0 26px rgba(74, 222, 128, 0.45), inset 0 0 22px rgba(74, 222, 128, 0.2);
+      animation: vitalityWave 0.72s ease-out forwards;
+    }
+
+    .fx-meteor-fall {
+      width: 1.7rem;
+      height: 8.5rem;
+      border-radius: 999px;
+      background: linear-gradient(180deg, rgba(255,255,255,0), rgba(251, 191, 36, 0.92), rgba(248, 113, 113, 0.98));
+      filter: drop-shadow(0 0 20px rgba(251, 146, 60, 0.95));
+      animation: meteorFall 0.62s cubic-bezier(0.12, 0.78, 0.2, 1) forwards;
+    }
+
+    .fx-meteor-explosion {
+      width: 12rem;
+      height: 12rem;
+      border-radius: 999px;
+      background:
+        radial-gradient(circle, rgba(255,255,255,0.96) 0%, rgba(251, 191, 36, 0.92) 22%, rgba(248, 113, 113, 0.65) 42%, rgba(239, 68, 68, 0.18) 62%, rgba(239,68,68,0) 100%);
+      filter: drop-shadow(0 0 28px rgba(248, 113, 113, 0.85));
+      animation: meteorExplosion 0.8s ease-out forwards;
+    }
+
+    .fx-burn-mark {
+      width: 8.5rem;
+      height: 8.5rem;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(251, 191, 36, 0.18), rgba(248, 113, 113, 0.24), rgba(248,113,113,0));
+      border: 2px solid rgba(251, 146, 60, 0.45);
+      animation: burnMark 0.38s ease-out forwards;
+    }
+
+    .fx-poison-cloud {
+      width: 9rem;
+      height: 6rem;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(163, 230, 53, 0.58), rgba(132, 204, 22, 0.2), rgba(132,204,22,0));
+      filter: blur(1px) drop-shadow(0 0 16px rgba(163, 230, 53, 0.55));
+      animation: poisonCloud 0.8s ease-out forwards;
+    }
+
+    .fx-quake-ring {
+      width: 10rem;
+      height: 10rem;
+      border-radius: 999px;
+      border: 3px solid rgba(251, 146, 60, 0.82);
+      box-shadow: 0 0 24px rgba(251, 146, 60, 0.42);
+      animation: quakeRing 0.62s ease-out forwards;
+    }
+
+    .fx-freeze-crystal {
+      width: 7rem;
+      height: 7rem;
+      clip-path: polygon(50% 0%, 68% 32%, 100% 50%, 68% 68%, 50% 100%, 32% 68%, 0% 50%, 32% 32%);
+      background: radial-gradient(circle, rgba(255,255,255,0.95), rgba(103, 232, 249, 0.85), rgba(34, 211, 238, 0.22));
+      filter: drop-shadow(0 0 24px rgba(103, 232, 249, 0.8));
+      animation: freezeCrystal 0.75s ease-out forwards;
+    }
+
+    .fx-gold-shower {
+      width: 100%;
+      height: 100%;
+      background:
+        radial-gradient(circle at 20% 15%, rgba(250, 204, 21, 0.95) 0 6px, transparent 7px),
+        radial-gradient(circle at 40% 32%, rgba(250, 204, 21, 0.9) 0 5px, transparent 6px),
+        radial-gradient(circle at 63% 20%, rgba(253, 224, 71, 0.92) 0 6px, transparent 7px),
+        radial-gradient(circle at 82% 40%, rgba(250, 204, 21, 0.86) 0 4px, transparent 5px);
+      animation: goldShower 0.7s ease-out forwards;
+    }
+
+    .fx-power-surge {
+      width: 9.5rem;
+      height: 9.5rem;
+      border-radius: 999px;
+      border: 3px solid rgba(251, 113, 133, 0.88);
+      box-shadow: 0 0 28px rgba(251, 113, 133, 0.42), inset 0 0 20px rgba(251, 113, 133, 0.18);
+      animation: powerSurgeRing 0.72s ease-out forwards;
+    }
+
+    .fx-skill-caption {
+      min-width: 4rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      background: rgba(3, 7, 18, 0.82);
+      border: 1px solid rgba(255,255,255,0.14);
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      box-shadow: 0 0 18px rgba(0,0,0,0.35);
+      animation: skillCaption 0.55s ease-out forwards;
+    }
+
+    @keyframes arenaSolar {
+      0% { box-shadow: inset 0 0 0 rgba(103,232,249,0); }
+      30% { box-shadow: inset 0 0 140px rgba(103,232,249,0.1); }
+      100% { box-shadow: inset 0 0 0 rgba(103,232,249,0); }
+    }
+    @keyframes arenaCyan {
+      0% { box-shadow: inset 0 0 0 rgba(34,211,238,0); }
+      50% { box-shadow: inset 0 0 120px rgba(34,211,238,0.1); }
+      100% { box-shadow: inset 0 0 0 rgba(34,211,238,0); }
+    }
+    @keyframes arenaGold {
+      0% { box-shadow: inset 0 0 0 rgba(250,204,21,0); }
+      45% { box-shadow: inset 0 0 120px rgba(250,204,21,0.12); }
+      100% { box-shadow: inset 0 0 0 rgba(250,204,21,0); }
+    }
+    @keyframes arenaFrost {
+      0% { box-shadow: inset 0 0 0 rgba(103,232,249,0); }
+      40% { box-shadow: inset 0 0 120px rgba(125,211,252,0.14); }
+      100% { box-shadow: inset 0 0 0 rgba(103,232,249,0); }
+    }
+    @keyframes arenaThunder {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-4px); box-shadow: inset 0 0 90px rgba(250, 204, 21, 0.1); }
+      75% { transform: translateX(4px); box-shadow: inset 0 0 90px rgba(250, 204, 21, 0.14); }
+    }
+    @keyframes arenaPoison {
+      0% { box-shadow: inset 0 0 0 rgba(163,230,53,0); }
+      50% { box-shadow: inset 0 0 110px rgba(163,230,53,0.11); }
+      100% { box-shadow: inset 0 0 0 rgba(163,230,53,0); }
+    }
+    @keyframes arenaShadow {
+      0% { box-shadow: inset 0 0 0 rgba(192,132,252,0); }
+      50% { box-shadow: inset 0 0 100px rgba(192,132,252,0.12); }
+      100% { box-shadow: inset 0 0 0 rgba(192,132,252,0); }
+    }
+    @keyframes arenaQuake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-5px) rotate(-0.25deg); }
+      40% { transform: translateX(4px) rotate(0.25deg); }
+      60% { transform: translateX(-3px) rotate(-0.2deg); }
+      80% { transform: translateX(3px) rotate(0.2deg); }
+    }
+    @keyframes arenaWind {
+      0% { transform: translateX(-8px); box-shadow: inset 0 0 0 rgba(56,189,248,0); }
+      50% { transform: translateX(8px); box-shadow: inset 0 0 90px rgba(56,189,248,0.08); }
+      100% { transform: translateX(0); box-shadow: inset 0 0 0 rgba(56,189,248,0); }
+    }
+    @keyframes arenaMeteor {
+      0% { transform: scale(1); box-shadow: inset 0 0 0 rgba(248,113,113,0); }
+      30% { transform: scale(1.01); box-shadow: inset 0 0 140px rgba(248,113,113,0.14); }
+      60% { transform: scale(0.995); box-shadow: inset 0 0 100px rgba(251,191,36,0.12); }
+      100% { transform: scale(1); box-shadow: inset 0 0 0 rgba(248,113,113,0); }
+    }
+    @keyframes arenaBurn {
+      0% { box-shadow: inset 0 0 0 rgba(251,146,60,0); }
+      50% { box-shadow: inset 0 0 80px rgba(251,146,60,0.1); }
+      100% { box-shadow: inset 0 0 0 rgba(251,146,60,0); }
+    }
+    @keyframes arenaVitality {
+      0% { box-shadow: inset 0 0 0 rgba(74,222,128,0); }
+      45% { box-shadow: inset 0 0 110px rgba(74,222,128,0.12); }
+      100% { box-shadow: inset 0 0 0 rgba(74,222,128,0); }
+    }
+    @keyframes burstRing {
+      0% { opacity: 0; transform: translate(-50%, -50%) scale(0.35); }
+      30% { opacity: 1; }
+      100% { opacity: 0; transform: translate(-50%, -50%) scale(1.16); }
+    }
+    @keyframes thunderArc {
+      0% { opacity: 0; transform: translate(-50%, -65%) rotate(-10deg) scaleY(0.2); }
+      30% { opacity: 1; }
+      100% { opacity: 0; transform: translate(-50%, -50%) rotate(8deg) scaleY(1.08); }
+    }
+    @keyframes shadowBlade {
+      0% { opacity: 0; transform: translate(-30%, -50%) rotate(-16deg) scaleX(0.2); }
+      40% { opacity: 1; }
+      100% { opacity: 0; transform: translate(-55%, -50%) rotate(10deg) scaleX(1.15); }
+    }
+    @keyframes windBlade {
+      0% { opacity: 0; transform: translate(-20%, -50%) rotate(-12deg) scaleX(0.15); }
+      30% { opacity: 1; }
+      100% { opacity: 0; transform: translate(-60%, -50%) rotate(8deg) scaleX(1.16); }
+    }
+    @keyframes hasteLines {
+      0% { opacity: 0; transform: translate(-55%, -50%) skewX(-10deg); }
+      40% { opacity: 0.95; }
+      100% { opacity: 0; transform: translate(-45%, -50%) skewX(12deg); }
+    }
+    @keyframes vitalityWave {
+      0% { opacity: 0; transform: translate(-50%, -50%) scale(0.25); }
+      35% { opacity: 1; }
+      100% { opacity: 0; transform: translate(-50%, -50%) scale(1.15); }
+    }
+    @keyframes meteorFall {
+      0% { opacity: 0; transform: translate(-50%, -130%) rotate(12deg) scaleY(0.2); }
+      15% { opacity: 1; }
+      100% { opacity: 0; transform: translate(-50%, -25%) rotate(-6deg) scaleY(1.1); }
+    }
+    @keyframes meteorExplosion {
+      0% { opacity: 0; transform: translate(-50%, -50%) scale(0.12); }
+      25% { opacity: 1; }
+      100% { opacity: 0; transform: translate(-50%, -50%) scale(1.08); }
+    }
+    @keyframes burnMark {
+      0% { opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
+      35% { opacity: 0.88; }
+      100% { opacity: 0; transform: translate(-50%, -50%) scale(1.08); }
+    }
+    @keyframes poisonCloud {
+      0% { opacity: 0; transform: translate(-50%, -45%) scale(0.8); }
+      30% { opacity: 0.92; }
+      100% { opacity: 0; transform: translate(-50%, -65%) scale(1.2); }
+    }
+    @keyframes quakeRing {
+      0% { opacity: 0; transform: translate(-50%, -50%) scale(0.45); }
+      30% { opacity: 1; }
+      100% { opacity: 0; transform: translate(-50%, -50%) scale(1.15); }
+    }
+    @keyframes freezeCrystal {
+      0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5) rotate(0deg); }
+      30% { opacity: 1; }
+      100% { opacity: 0; transform: translate(-50%, -50%) scale(1.06) rotate(20deg); }
+    }
+    @keyframes goldShower {
+      0% { opacity: 0; transform: translate(-50%, -58%); }
+      30% { opacity: 1; }
+      100% { opacity: 0; transform: translate(-50%, -40%); }
+    }
+    @keyframes powerSurgeRing {
+      0% { opacity: 0; transform: translate(-50%, -50%) scale(0.4); }
+      35% { opacity: 1; }
+      100% { opacity: 0; transform: translate(-50%, -50%) scale(1.12); }
+    }
+    @keyframes skillCaption {
+      0% { opacity: 0; transform: translate(-50%, -10px) scale(0.7); }
+      25% { opacity: 1; transform: translate(-50%, -16px) scale(1.05); }
+      100% { opacity: 0; transform: translate(-50%, -42px) scale(0.95); }
+    }
+    @keyframes meteorStrike {
+      0% { filter: brightness(1) drop-shadow(0 0 0 transparent); transform: scale(0.88) translateY(-14px); }
+      30% { filter: brightness(2.9) drop-shadow(0 0 24px #fb923c); transform: scale(1.25) translateY(6px); }
+      60% { filter: brightness(2.1) drop-shadow(0 0 30px #f87171); transform: scale(1.1) rotate(-2deg); }
+      100% { filter: brightness(1) drop-shadow(0 0 0 transparent); transform: scale(1) rotate(0); }
+    }
+    @keyframes meteorBurn {
+      0% { filter: brightness(1.8) drop-shadow(0 0 18px #fb923c); transform: scale(1.08); }
+      100% { filter: brightness(1) drop-shadow(0 0 0 transparent); transform: scale(1); }
+    }
+    @keyframes vitalityPulse {
+      0% { filter: brightness(1) drop-shadow(0 0 0 transparent); transform: scale(1); }
+      45% { filter: brightness(2.2) drop-shadow(0 0 20px #4ade80); transform: scale(1.16); }
+      100% { filter: brightness(1) drop-shadow(0 0 0 transparent); transform: scale(1); }
+    }
   </style>
 </head>
 <body class="flex justify-center items-center min-h-screen bg-gray-950">
@@ -310,6 +659,7 @@
 
   <!-- 3. BATTLE ARENA -->
   <main id="battle-field" class="relative flex-1 bg-gradient-to-b from-slate-950 via-gray-900 to-gray-950 flex flex-col justify-between p-4 overflow-hidden">
+    <div id="battle-fx"></div>
     
     <!-- Characters (Hero vs Mob) -->
     <div class="flex justify-around items-center w-full my-auto py-2">
@@ -480,6 +830,17 @@
             </button>
           </div>
 
+          <!-- Permanent Auto Speed -->
+          <div class="flex justify-between items-center bg-gray-950/60 p-2.5 rounded-xl border border-gray-800">
+            <div>
+              <div class="text-xs font-bold text-cyan-300">🌀 자동 공격 가속</div>
+              <div class="text-[10px] text-gray-400">Lv.<span id="lvl-soul-autoSpd">0</span> (현재 <span id="stat-soul-autoSpd-val">1.80</span>s)</div>
+            </div>
+            <button onclick="buySoulUpgrade('autoSpd', 1)" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white font-extrabold text-xs rounded-lg active:scale-95">
+              1 🔮
+            </button>
+          </div>
+
           <!-- Boss Slayer -->
           <div class="flex justify-between items-center bg-gray-950/60 p-2.5 rounded-xl border border-gray-800">
             <div>
@@ -550,7 +911,7 @@
 </div>
 
 <script>
-  const HERO_NAMES = ["강해진","차은우","이도현","김우빈","송강","안효섭","남주혁","박보검","황민현","로운"];
+  const HERO_NAMES = ["강해진","차은우","이도현","김우빈","송강","안효섭","남주혁","박보검","황민현","로운","디름","고건우","감만준","김민준","김서준","김도윤","김하준","김주원","김지호","이준호","이서준","이도윤","이하준","이시우","이주원","박민준","박서준","박도윤","박하준","박지호","박시우","최민준","최서준","최도윤","최하준","최주원","정민준","정서준","정도윤","정하준","정시우","정지호","조민준","조서준","조도윤","조하준","조시우","윤민준","윤서준","윤도윤","윤하준","윤지호","한서준","한도윤","한주원","한지후","유시우","유건우","장민재","장도현","장시우","임서진","임도윤"];
   
   const MONSTERS = [
     { name: "슬라임", emoji: "🟢", hp: 35, gold: 12 },
@@ -575,6 +936,10 @@
   const PATTERN_START_STAGE = 10;
   const TIME_WARP_DAMAGE_MULTIPLIER = 2;
   const ATTACK_SKILL_DAMAGE_MULTIPLIER = 10;
+  const AUTO_ATTACK_BASE_INTERVAL = 1.8;
+  const AUTO_ATTACK_MIN_INTERVAL = 0.01;
+  const AUTO_ATTACK_GOLD_STEP = 0.08;
+  const AUTO_ATTACK_SOUL_STEP = 0.04;
 
   const SKILL_SHOP = [
     {
@@ -585,12 +950,14 @@
       cd: 12,
       action: () => {
         playSkillEffect('skill-burst');
-        let count = 0;
-        let t = setInterval(() => {
-          tapAttack(true, true, TIME_WARP_DAMAGE_MULTIPLIER);
-          count++;
-          if (count >= 12) clearInterval(t);
-        }, 100);
+        runSkillSequence('time_warp', {
+          hits: 12,
+          intervalMs: 100,
+          onTick: (count) => {
+            tapAttack(true, true, getScaledSkillValue('time_warp', TIME_WARP_DAMAGE_MULTIPLIER, 0.16));
+            if (count % 3 === 0) spawnBattleEffect('fx-burst-ring', 420, { width: '7rem', height: '7rem' });
+          }
+        });
       }
     },
     {
@@ -600,9 +967,10 @@
       priceGem: 80,
       cd: 20,
       action: () => {
-        activateSkillBuff('attack', 10000, 2);
+        const lv = getSkillLevel('power_surge');
+        activateSkillBuff('attack', 10000 + (lv * 600), 2 + (lv * 0.15));
         playSkillEffect('skill-power');
-        showDmgText('ATTACK ×2', true);
+        showDmgText(`ATTACK ×${(2 + (lv * 0.15)).toFixed(2)}`, true);
       }
     },
     {
@@ -612,7 +980,8 @@
       priceGem: 100,
       cd: 25,
       action: () => {
-        activateSkillBuff('autoSpeed', 12000, 0.5);
+        const lv = getSkillLevel('overclock');
+        activateSkillBuff('autoSpeed', 12000 + (lv * 900), 0.5, 'overclock');
         playSkillEffect('skill-haste');
         showDmgText('AUTO SPEED UP!', true);
       }
@@ -624,9 +993,24 @@
       priceGem: 120,
       cd: 30,
       action: () => {
-        activateSkillBuff('gold', 15000, 2);
+        const lv = getSkillLevel('gold_rush');
+        activateSkillBuff('gold', 15000 + (lv * 700), 2 + (lv * 0.2));
         playSkillEffect('skill-gold');
-        showDmgText('GOLD ×2', true);
+        showDmgText(`GOLD ×${(2 + (lv * 0.2)).toFixed(2)}`, true);
+      }
+    },
+    {
+      id: "vitality",
+      name: "💚 활력",
+      desc: "모든 장착 스킬의 남은 쿨타임을 2초 줄이고, 2초간 자동 공격 속도를 50% 높입니다.",
+      priceGem: 250,
+      cd: 5,
+      action: () => {
+        const lv = getSkillLevel('vitality');
+        reduceEquippedSkillCooldowns(2 + (lv * 0.3));
+        activateSkillBuff('autoSpeed', 2000 + (lv * 250), 0.5, 'vitality');
+        playSkillEffect('skill-vitality');
+        showDmgText('VITALITY!', true);
       }
     },
     {
@@ -637,7 +1021,8 @@
       cd: 18,
       action: () => {
         if (!currentMob) return;
-        currentMob.frozenUntil = Date.now() + 4000;
+        const freezeDuration = 4000 + (getSkillLevel('frost_bind') * 450);
+        currentMob.frozenUntil = Date.now() + freezeDuration;
         currentMob.blocking = false;
         playSkillEffect('freeze-flash');
         showDmgText('FREEZE!', true);
@@ -647,16 +1032,28 @@
     {
       id: "meteor",
       name: "☄️ 메테오 스트라이크",
-      desc: "현재 공격력의 120배에 달하는 폭딜을 가합니다.",
+      desc: "거대한 메테오가 떨어져 폭발 피해를 주고 화상 도트 피해를 남깁니다.",
       priceGem: 1200,
       cd: 30,
       action: () => {
-        if (currentMob) {
-          skillDamage(12, 'METEOR!', 'skill-burst');
-        }
+        if (!currentMob) return;
+        const targetX = `${38 + Math.random() * 24}%`;
+        spawnBattleEffect('fx-meteor-fall', 620, { left: targetX, top: '14%' });
+        showSkillCaption('METEOR');
+        const runtimeKey = createSkillRuntime('meteor');
+        scheduleRuntimeTimeout(runtimeKey, () => {
+          if (!isRuntimeTargetAlive(runtimeKey)) {
+            clearSkillRuntime(runtimeKey);
+            return;
+          }
+          skillDamage(getScaledSkillValue('meteor', 24, 0.22), 'METEOR!', 'skill-meteor', { showLabel: true });
+          spawnBattleEffect('fx-meteor-explosion', 820, { left: targetX, top: '42%' });
+          startDamageOverTime('meteor-dot', 6, 400, runtimeKey, () => {
+            skillDamage(getScaledSkillValue('meteor', 0.75, 0.12), 'BURN', 'skill-meteor-dot', { showLabel: false });
+          });
+        }, 300);
       }
-    }
-    ,
+    },
     {
       id: "thunder_chain",
       name: "⚡ 천둥 연쇄",
@@ -664,12 +1061,11 @@
       priceGem: 650,
       cd: 22,
       action: () => {
-        let count = 0;
-        const timer = setInterval(() => {
-          skillDamage(1.35, '⚡ CHAIN', 'skill-thunder');
-          count++;
-          if (count >= 3) clearInterval(timer);
-        }, 170);
+        runSkillSequence('thunder_chain', {
+          hits: 3,
+          intervalMs: 170,
+          onTick: () => skillDamage(getScaledSkillValue('thunder_chain', 1.35, 0.18), '⚡ CHAIN', 'skill-thunder', { showLabel: true })
+        });
       }
     },
     {
@@ -679,12 +1075,11 @@
       priceGem: 800,
       cd: 26,
       action: () => {
-        let count = 0;
-        const timer = setInterval(() => {
-          skillDamage(0.65, '☣️ POISON', 'skill-poison');
-          count++;
-          if (count >= 6) clearInterval(timer);
-        }, 800);
+        runSkillSequence('venom_burst', {
+          hits: 6,
+          intervalMs: 800,
+          onTick: (count) => skillDamage(getScaledSkillValue('venom_burst', 0.65, 0.15), '☣️ POISON', 'skill-poison', { showLabel: count === 0 })
+        });
       }
     },
     {
@@ -694,12 +1089,14 @@
       priceGem: 900,
       cd: 25,
       action: () => {
-        let count = 0;
-        const timer = setInterval(() => {
-          skillDamage(0.72, '🌑 SHADOW', 'skill-shadow');
-          count++;
-          if (count >= 6) clearInterval(timer);
-        }, 95);
+        runSkillSequence('shadow_barrage', {
+          hits: 6,
+          intervalMs: 95,
+          onTick: (count) => {
+            spawnBattleEffect('fx-shadow-slash', 320, { left: `${38 + Math.random() * 24}%`, top: `${34 + Math.random() * 18}%`, transform: `translate(-50%, -50%) rotate(${Math.random() * 26 - 13}deg)` });
+            skillDamage(getScaledSkillValue('shadow_barrage', 0.72, 0.18), '🌑 SHADOW', 'skill-shadow', { showLabel: count === 0 });
+          }
+        });
       }
     },
     {
@@ -710,77 +1107,102 @@
       cd: 32,
       action: () => {
         if (!currentMob) return;
+        const lv = getSkillLevel('earth_breaker');
         currentMob.blocking = false;
-        currentMob.nextBlockAt = Date.now() + 3000;
-        skillDamage(3.2, '🌋 BREAK!', 'skill-quake');
+        currentMob.nextBlockAt = Date.now() + 3000 + (lv * 400);
+        skillDamage(getScaledSkillValue('earth_breaker', 3.2, 0.2), '🌋 BREAK!', 'skill-quake', { showLabel: true });
         updateMobStatus();
       }
     },
     {
       id: "wind_cutter",
       name: "🌪️ 질풍 참격",
-      desc: "바람을 두른 검격으로 4회 연속 베어냅니다.",
+      desc: "바람을 두른 검격으로 32회 초고속 연속 베기를 퍼붓습니다.",
       priceGem: 1300,
       cd: 28,
       action: () => {
-        let count = 0;
-        const timer = setInterval(() => {
-          skillDamage(1.05, '🌪️ CUT', 'skill-wind');
-          count++;
-          if (count >= 4) clearInterval(timer);
-        }, 130);
+        showSkillCaption('WIND CUTTER');
+        runSkillSequence('wind_cutter', {
+          hits: 32,
+          intervalMs: 18,
+          onTick: (count) => {
+            if (count % 2 === 0) {
+              spawnBattleEffect('fx-wind-slash', 240, {
+                left: `${36 + Math.random() * 28}%`,
+                top: `${32 + Math.random() * 22}%`,
+                transform: `translate(-50%, -50%) rotate(${Math.random() * 36 - 18}deg)`
+              });
+            }
+            skillDamage(getScaledSkillValue('wind_cutter', 0.63, 0.1), '🌪️ CUT', count % 2 === 0 ? 'skill-wind' : null, { showLabel: count % 8 === 0 });
+          }
+        });
       }
     }
   ];
 
-  let game = {
-    hero: {
-      name: "",
-      avatar: "",
-    },
-    upgrades: {
-      atk: 0,
-      critRate: 0,
-      critDmg: 0,
-      autoSpd: 0,
-      gold: 0
-    },
-    currencies: {
-      gold: 0,
-      gem: 0,
-      soul: 0
-    },
-    stage: 1,
-    autoAttack: false,
-    
-    unlockedSkills: [],
-    equippedSkills: [null, null],
-    skillCDs: {},
-    skillBuffs: {
-      attackUntil: 0,
-      attackMultiplier: 1,
-      autoSpeedUntil: 0,
-      autoSpeedMultiplier: 1,
-      goldUntil: 0,
-      goldMultiplier: 1
-    },
-    
-    soulUpgrades: {
-      atk: 0,
-      gold: 0,
-      doubleHit: false,
-      bossDmg: false,
-      autoSkill: false,
-      autoUpgrade: false
-    },
+  function createDefaultGameState() {
+    return {
+      hero: {
+        name: "",
+        avatar: "",
+      },
+      upgrades: {
+        atk: 0,
+        critRate: 0,
+        critDmg: 0,
+        autoSpd: 0,
+        gold: 0
+      },
+      currencies: {
+        gold: 0,
+        gem: 0,
+        soul: 0
+      },
+      stage: 1,
+      autoAttack: false,
+      unlockedSkills: [],
+      equippedSkills: [null, null],
+      skillCDs: {},
+      skillLevels: {},
+      skillBuffs: {
+        attackUntil: 0,
+        attackMultiplier: 1,
+        autoSpeedUntil: 0,
+        autoSpeedMultiplier: 1,
+        overclockUntil: 0,
+        overclockMultiplier: 1,
+        vitalityUntil: 0,
+        vitalityMultiplier: 1,
+        goldUntil: 0,
+        goldMultiplier: 1
+      },
+      soulUpgrades: {
+        atk: 0,
+        gold: 0,
+        autoSpd: 0,
+        doubleHit: false,
+        bossDmg: false,
+        autoSkill: false,
+        autoUpgrade: false
+      },
+      quests: {
+        totalKills: 0,
+        totalTaps: 0,
+        claimed: {}
+      },
+      pendingHeroReroll: false
+    };
+  }
 
-    quests: {
-      totalKills: 0,
-      totalTaps: 0,
-      claimed: {}
-    }
-  };
+  function normalizeSkillLevels(levels = {}) {
+    const normalized = {};
+    SKILL_SHOP.forEach(sk => {
+      normalized[sk.id] = Math.max(0, Number(levels[sk.id] || 0));
+    });
+    return normalized;
+  }
 
+  let game = createDefaultGameState();
   let currentMob = null;
   let autoTimer = null;
   let mobPatternTimer = null;
@@ -793,14 +1215,65 @@
     localStorage.setItem('HERO_RAISE_M_SAVE_V2', JSON.stringify(game));
   }
 
+  function migrateGameState(savedGame) {
+    const defaults = createDefaultGameState();
+    const merged = {
+      ...defaults,
+      ...(savedGame || {}),
+      hero: {
+        ...defaults.hero,
+        ...((savedGame || {}).hero || {})
+      },
+      upgrades: {
+        ...defaults.upgrades,
+        ...((savedGame || {}).upgrades || {})
+      },
+      currencies: {
+        ...defaults.currencies,
+        ...((savedGame || {}).currencies || {})
+      },
+      unlockedSkills: Array.isArray((savedGame || {}).unlockedSkills) ? (savedGame.unlockedSkills.filter(skId => SKILL_SHOP.some(sk => sk.id === skId))) : [],
+      equippedSkills: Array.isArray((savedGame || {}).equippedSkills)
+        ? [...savedGame.equippedSkills.slice(0, 2), null, null].slice(0, 2).map(skId => SKILL_SHOP.some(sk => sk.id === skId) ? skId : null)
+        : [null, null],
+      skillCDs: { ...((savedGame || {}).skillCDs || {}) },
+      skillLevels: normalizeSkillLevels((savedGame || {}).skillLevels || {}),
+      skillBuffs: {
+        ...defaults.skillBuffs,
+        ...((savedGame || {}).skillBuffs || {})
+      },
+      soulUpgrades: {
+        ...defaults.soulUpgrades,
+        ...((savedGame || {}).soulUpgrades || {})
+      },
+      quests: {
+        ...defaults.quests,
+        ...((savedGame || {}).quests || {}),
+        claimed: {
+          ...defaults.quests.claimed,
+          ...((((savedGame || {}).quests) || {}).claimed || {})
+        }
+      }
+    };
+
+    if (merged.skillBuffs.autoSpeedUntil > merged.skillBuffs.overclockUntil) {
+      merged.skillBuffs.overclockUntil = merged.skillBuffs.autoSpeedUntil;
+      merged.skillBuffs.overclockMultiplier = merged.skillBuffs.autoSpeedMultiplier || 0.5;
+    }
+
+    Object.keys(merged.skillCDs).forEach(skId => {
+      if (!SKILL_SHOP.some(sk => sk.id === skId)) delete merged.skillCDs[skId];
+      else merged.skillCDs[skId] = Math.max(0, Number(merged.skillCDs[skId] || 0));
+    });
+
+    return merged;
+  }
+
   function loadGame() {
     const saved = localStorage.getItem('HERO_RAISE_M_SAVE_V2');
     if (saved) {
       try {
-        game = JSON.parse(saved);
-        game.skillBuffs = game.skillBuffs || {};
-        game.soulUpgrades.autoSkill = game.soulUpgrades.autoSkill || false;
-        game.soulUpgrades.autoUpgrade = game.soulUpgrades.autoUpgrade || false;
+        game = migrateGameState(JSON.parse(saved));
         if (game.pendingHeroReroll) {
           document.getElementById('gacha-screen').classList.remove('hidden');
           setTimeout(startGachaSpin, 250);
@@ -811,6 +1284,7 @@
         return true;
       } catch(e) { console.error(e); }
     }
+    game = createDefaultGameState();
     return false;
   }
 
@@ -876,9 +1350,11 @@
   }
 
   function initGame() {
+    game.skillLevels = normalizeSkillLevels(game.skillLevels || {});
     spawnMob();
     renderSkillShop();
     updateUI();
+    updateSkillSlotsUI();
     syncSkillBuffs();
     restartAutoAttackLoop();
     restartAutoSkillLoop();
@@ -919,7 +1395,8 @@
       blocking: false,
       blockUntil: 0,
       nextBlockAt: game.stage >= PATTERN_START_STAGE ? Date.now() + 3200 + Math.random() * 1800 : 0,
-      frozenUntil: 0
+      frozenUntil: 0,
+      spawnToken: ++mobSpawnToken
     };
 
     document.getElementById('txt-mob-name').innerText = currentMob.name;
@@ -970,45 +1447,99 @@
     }
   }
 
-  function playSkillEffect(className) {
+  function replayTransientClass(element, className, duration = 700) {
+    if (!element || !className) return;
+    element.classList.remove(className);
+    void element.offsetWidth;
+    element.classList.add(className);
+    setTimeout(() => element.classList.remove(className), duration);
+  }
+
+  function triggerArenaEffect(className, duration = 700) {
+    const field = document.getElementById('battle-field');
+    replayTransientClass(field, className, duration);
+  }
+
+  function spawnBattleEffect(className, duration = 550, styles = {}, text = '') {
+    const layer = document.getElementById('battle-fx');
+    if (!layer) return null;
+    const effect = document.createElement('div');
+    effect.className = `battle-fx-node ${className}`;
+    Object.assign(effect.style, styles);
+    if (text) effect.innerText = text;
+    layer.appendChild(effect);
+    setTimeout(() => effect.remove(), duration);
+    return effect;
+  }
+
+  function showSkillCaption(text) {
+    spawnBattleEffect('fx-skill-caption', 560, { left: '50%', top: '20%' }, text);
+  }
+
+  const SKILL_EFFECT_PRESETS = {
+    'skill-burst': { duration: 760, arenaClass: 'arena-solar', overlayClass: 'fx-burst-ring', overlayDuration: 620 },
+    'skill-power': { duration: 740, arenaClass: 'arena-solar', overlayClass: 'fx-power-surge', overlayDuration: 720 },
+    'skill-haste': { duration: 620, arenaClass: 'arena-cyan', overlayClass: 'fx-haste-lines', overlayDuration: 620 },
+    'skill-gold': { duration: 720, arenaClass: 'arena-gold', overlayClass: 'fx-gold-shower', overlayDuration: 700 },
+    'freeze-flash': { duration: 760, arenaClass: 'arena-frost', overlayClass: 'fx-freeze-crystal', overlayDuration: 720 },
+    'skill-thunder': { duration: 420, arenaClass: 'arena-thunder', overlayClass: 'fx-thunder-arc', overlayDuration: 420 },
+    'skill-poison': { duration: 760, arenaClass: 'arena-poison', overlayClass: 'fx-poison-cloud', overlayDuration: 760 },
+    'skill-shadow': { duration: 360, arenaClass: 'arena-shadow', overlayClass: 'fx-shadow-slash', overlayDuration: 320 },
+    'skill-quake': { duration: 620, arenaClass: 'arena-quake', overlayClass: 'fx-quake-ring', overlayDuration: 620 },
+    'skill-wind': { duration: 260, arenaClass: 'arena-wind', overlayClass: 'fx-wind-slash', overlayDuration: 240 },
+    'skill-meteor': { duration: 900, arenaClass: 'arena-meteor', overlayClass: 'fx-meteor-explosion', overlayDuration: 820 },
+    'skill-meteor-dot': { duration: 380, arenaClass: 'arena-burn', overlayClass: 'fx-burn-mark', overlayDuration: 380 },
+    'skill-vitality': { duration: 720, arenaClass: 'arena-vitality', overlayClass: 'fx-vitality-wave', overlayDuration: 720 }
+  };
+
+  function playSkillEffect(className, options = {}) {
+    if (!className) return;
     const mobEmoji = document.getElementById('txt-mob-emoji');
-    mobEmoji.classList.remove(className);
-    void mobEmoji.offsetWidth;
-    mobEmoji.classList.add(className);
-    if (className !== 'mob-frozen') {
-      setTimeout(() => mobEmoji.classList.remove(className), 700);
+    const preset = {
+      ...(SKILL_EFFECT_PRESETS[className] || {}),
+      ...options
+    };
+    replayTransientClass(mobEmoji, className, preset.duration || 700);
+    if (preset.arenaClass) triggerArenaEffect(preset.arenaClass, preset.duration || 700);
+    if (preset.overlayClass) {
+      spawnBattleEffect(preset.overlayClass, preset.overlayDuration || preset.duration || 700, preset.overlayStyles || {}, preset.overlayText || '');
     }
   }
 
   function getSkillBuffState() {
     game.skillBuffs = game.skillBuffs || {};
-    const defaults = {
-      attackUntil: 0,
-      attackMultiplier: 1,
-      autoSpeedUntil: 0,
-      autoSpeedMultiplier: 1,
-      goldUntil: 0,
-      goldMultiplier: 1
-    };
+    const defaults = createDefaultGameState().skillBuffs;
     Object.keys(defaults).forEach(key => {
       if (game.skillBuffs[key] === undefined) game.skillBuffs[key] = defaults[key];
     });
     return game.skillBuffs;
   }
 
-  function activateSkillBuff(type, duration, multiplier) {
+  function getAutoSpeedBuffMultiplier() {
+    const buffs = getSkillBuffState();
+    const now = Date.now();
+    let multiplier = 1;
+    if (buffs.autoSpeedUntil > now) multiplier *= (buffs.autoSpeedMultiplier || 1);
+    if (buffs.overclockUntil > now) multiplier *= (buffs.overclockMultiplier || 1);
+    if (buffs.vitalityUntil > now) multiplier *= (buffs.vitalityMultiplier || 1);
+    return multiplier;
+  }
+
+  function activateSkillBuff(type, duration, multiplier, sourceKey = type) {
     const buffs = getSkillBuffState();
     const keyMap = {
       attack: ['attackUntil', 'attackMultiplier'],
-      autoSpeed: ['autoSpeedUntil', 'autoSpeedMultiplier'],
-      gold: ['goldUntil', 'goldMultiplier']
+      gold: ['goldUntil', 'goldMultiplier'],
+      autoSpeed: [`${sourceKey}Until`, `${sourceKey}Multiplier`]
     };
-    const [untilKey, multiplierKey] = keyMap[type];
+    const [untilKey, multiplierKey] = keyMap[type] || [];
+    if (!untilKey || !multiplierKey) return;
+
     buffs[untilKey] = Date.now() + duration;
     buffs[multiplierKey] = multiplier;
 
-    if (skillBuffTimers[type]) clearTimeout(skillBuffTimers[type]);
-    skillBuffTimers[type] = setTimeout(() => {
+    if (skillBuffTimers[sourceKey]) clearTimeout(skillBuffTimers[sourceKey]);
+    skillBuffTimers[sourceKey] = setTimeout(() => {
       buffs[untilKey] = 0;
       buffs[multiplierKey] = 1;
       if (type === 'autoSpeed') restartAutoAttackLoop();
@@ -1022,18 +1553,23 @@
   function syncSkillBuffs() {
     const buffs = getSkillBuffState();
     const now = Date.now();
-    Object.entries({
-      attack: ['attackUntil', 'attackMultiplier'],
-      autoSpeed: ['autoSpeedUntil', 'autoSpeedMultiplier'],
-      gold: ['goldUntil', 'goldMultiplier']
-    }).forEach(([type, [untilKey, multiplierKey]]) => {
+    const entries = {
+      attack: ['attackUntil', 'attackMultiplier', false],
+      gold: ['goldUntil', 'goldMultiplier', false],
+      autoSpeedLegacy: ['autoSpeedUntil', 'autoSpeedMultiplier', true],
+      overclock: ['overclockUntil', 'overclockMultiplier', true],
+      vitality: ['vitalityUntil', 'vitalityMultiplier', true]
+    };
+
+    Object.entries(entries).forEach(([type, [untilKey, multiplierKey, affectsAuto]]) => {
       const remaining = buffs[untilKey] - now;
       if (remaining > 0) {
-        if (type === 'autoSpeed') restartAutoAttackLoop();
+        if (affectsAuto) restartAutoAttackLoop();
+        if (skillBuffTimers[type]) clearTimeout(skillBuffTimers[type]);
         skillBuffTimers[type] = setTimeout(() => {
           buffs[untilKey] = 0;
           buffs[multiplierKey] = 1;
-          if (type === 'autoSpeed') restartAutoAttackLoop();
+          if (affectsAuto) restartAutoAttackLoop();
           saveGame();
         }, remaining + 50);
       } else {
@@ -1041,6 +1577,47 @@
         buffs[multiplierKey] = 1;
       }
     });
+  }
+
+  function getSkillLevel(skId) {
+    game.skillLevels = game.skillLevels || normalizeSkillLevels();
+    return Math.max(0, Number(game.skillLevels[skId] || 0));
+  }
+
+  function getSkillUpgradeCost(skId) {
+    const skill = SKILL_SHOP.find(sk => sk.id === skId);
+    if (!skill) return 0;
+    const lv = getSkillLevel(skId);
+    const baseCost = Math.max(25, Math.floor(skill.priceGem * 0.18));
+    return Math.floor(baseCost * Math.pow(1.55, lv));
+  }
+
+  function getScaledSkillValue(skId, baseValue, perLevel = 0.18) {
+    return baseValue * (1 + (getSkillLevel(skId) * perLevel));
+  }
+
+  function getSkillUpgradeSummary(skId) {
+    const lv = getSkillLevel(skId);
+    switch (skId) {
+      case 'power_surge':
+        return `공격 ×${(2 + lv * 0.15).toFixed(2)} · ${(10 + lv * 0.6).toFixed(1)}초`;
+      case 'overclock':
+        return `자동 가속 유지 ${(12 + lv * 0.9).toFixed(1)}초`;
+      case 'gold_rush':
+        return `골드 ×${(2 + lv * 0.2).toFixed(2)} · ${(15 + lv * 0.7).toFixed(1)}초`;
+      case 'frost_bind':
+        return `빙결 ${(4 + lv * 0.45).toFixed(1)}초`;
+      case 'earth_breaker':
+        return `피해 +${Math.round(lv * 20)}% · 봉쇄 ${(3 + lv * 0.4).toFixed(1)}초`;
+      case 'vitality':
+        return `쿨감 ${(2 + lv * 0.3).toFixed(1)}초 · 가속 ${(2 + lv * 0.25).toFixed(1)}초`;
+      case 'meteor':
+        return `낙하/화상 피해 +${Math.round(lv * 22)}%`;
+      case 'wind_cutter':
+        return `연속 베기 피해 +${Math.round(lv * 10)}%`;
+      default:
+        return `피해 +${Math.round(lv * 18)}%`;
+    }
   }
 
   function getBaseAttackPower() {
@@ -1054,18 +1631,97 @@
     return baseAtk;
   }
 
-  function skillDamage(multiplier, label, effectClass) {
-    if (!currentMob || currentMob.hp <= 0) return;
+  function animateMobHit(duration = 150) {
+    const mobEmoji = document.getElementById('txt-mob-emoji');
+    replayTransientClass(mobEmoji, 'hit-shake', duration);
+  }
+
+  let activeSkillRuntimes = {};
+  let mobSpawnToken = 0;
+
+  function createSkillRuntime(skillId) {
+    const key = `${skillId}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+    activeSkillRuntimes[key] = {
+      skillId,
+      mobToken: currentMob ? currentMob.spawnToken : 0,
+      intervals: [],
+      timeouts: []
+    };
+    return key;
+  }
+
+  function isRuntimeTargetAlive(runtimeKey) {
+    const runtime = activeSkillRuntimes[runtimeKey];
+    return Boolean(runtime && currentMob && currentMob.hp > 0 && currentMob.spawnToken === runtime.mobToken);
+  }
+
+  function clearSkillRuntime(runtimeKey) {
+    const runtime = activeSkillRuntimes[runtimeKey];
+    if (!runtime) return;
+    runtime.intervals.forEach(clearInterval);
+    runtime.timeouts.forEach(clearTimeout);
+    delete activeSkillRuntimes[runtimeKey];
+  }
+
+  function scheduleRuntimeTimeout(runtimeKey, callback, delay) {
+    const timer = setTimeout(() => {
+      callback();
+    }, delay);
+    activeSkillRuntimes[runtimeKey]?.timeouts.push(timer);
+    return timer;
+  }
+
+  function startDamageOverTime(skillId, ticks, intervalMs, parentRuntimeKey, onTick) {
+    let count = 0;
+    const timer = setInterval(() => {
+      if (!isRuntimeTargetAlive(parentRuntimeKey) || count >= ticks) {
+        clearInterval(timer);
+        return;
+      }
+      onTick(count);
+      count++;
+      if (count >= ticks) clearInterval(timer);
+    }, intervalMs);
+    activeSkillRuntimes[parentRuntimeKey]?.intervals.push(timer);
+  }
+
+  function runSkillSequence(skillId, { hits, intervalMs, onTick }) {
+    if (!currentMob) return;
+    const runtimeKey = createSkillRuntime(skillId);
+    let count = 0;
+
+    const tick = () => {
+      if (!isRuntimeTargetAlive(runtimeKey) || count >= hits) {
+        clearSkillRuntime(runtimeKey);
+        return;
+      }
+      onTick(count, runtimeKey);
+      count++;
+      if (count >= hits) clearSkillRuntime(runtimeKey);
+    };
+
+    if (hits > 1) {
+      const timer = setInterval(tick, intervalMs);
+      activeSkillRuntimes[runtimeKey].intervals.push(timer);
+    }
+    tick();
+  }
+
+  function skillDamage(multiplier, label, effectClass, options = {}) {
+    if (!currentMob || currentMob.hp <= 0) return false;
     let damage = Math.max(1, Math.floor(getBaseAttackPower() * multiplier * ATTACK_SKILL_DAMAGE_MULTIPLIER));
     if (currentMob.blocking && currentMob.frozenUntil <= Date.now()) {
       damage = Math.max(1, Math.floor(damage * 0.15));
       showDmgText('BLOCK', false);
     }
-    playSkillEffect(effectClass);
+    if (effectClass) playSkillEffect(effectClass, options.effectOptions || {});
+    animateMobHit(options.hitDuration || 170);
     currentMob.hp -= damage;
     showDmgText(damage, true);
+    if (label && options.showLabel) showSkillCaption(label);
     checkMobDefeat();
     updateUI();
+    return true;
   }
 
   function tapAttack(isAuto = false, isExtraHit = false, damageMultiplier = 1) {
@@ -1073,20 +1729,13 @@
 
     if (!isAuto && !isExtraHit) game.quests.totalTaps++;
 
-    // Mob Shake animation
-    const mobEmoji = document.getElementById('txt-mob-emoji');
-    mobEmoji.classList.remove('hit-shake');
-    void mobEmoji.offsetWidth;
-    mobEmoji.classList.add('hit-shake');
-    setTimeout(() => mobEmoji.classList.remove('hit-shake'), 140);
+    animateMobHit(140);
 
-    // Stats calculation
     let baseAtk = getBaseAttackPower();
 
-    // Crit Rate & Crit Dmg
-    let critChance = 0.05 + (game.upgrades.critRate * 0.005); // +0.5% per lv
+    let critChance = 0.05 + (game.upgrades.critRate * 0.005);
     let isCrit = Math.random() < critChance;
-    let critMultiplier = 1.5 + (game.upgrades.critDmg * 0.05); // +5% per lv
+    let critMultiplier = 1.5 + (game.upgrades.critDmg * 0.05);
     
     let finalDmg = isCrit ? Math.floor(baseAtk * critMultiplier) : Math.floor(baseAtk);
     finalDmg = Math.floor(finalDmg * damageMultiplier);
@@ -1099,7 +1748,6 @@
     currentMob.hp -= finalDmg;
     showDmgText(finalDmg, isCrit);
 
-    // Double Hit Perk Trigger
     if (!isExtraHit && game.soulUpgrades.doubleHit) {
       setTimeout(() => tapAttack(isAuto, true, damageMultiplier), 80);
     }
@@ -1112,14 +1760,12 @@
     if (currentMob && currentMob.hp <= 0) {
       game.quests.totalKills++;
 
-      // Gold Reward
       let goldMult = 1 + (game.upgrades.gold * 0.04) + (game.soulUpgrades.gold * 0.2);
       const buffs = getSkillBuffState();
       if (buffs.goldUntil > Date.now()) goldMult *= buffs.goldMultiplier;
       let goldEarned = Math.floor(currentMob.gold * goldMult);
       game.currencies.gold += goldEarned;
 
-      // Gem Reward
       if (currentMob.isBoss) {
         let bossGems = 15 + (game.stage * 3);
         game.currencies.gem += bossGems;
@@ -1187,17 +1833,15 @@
   }
 
   function getAutoInterval() {
-    // Base 1.8s down to min 0.2s
-    let sec = 1.8 - (game.upgrades.autoSpd * 0.08);
-    const buffs = getSkillBuffState();
-    if (buffs.autoSpeedUntil > Date.now()) sec *= buffs.autoSpeedMultiplier;
-    return Math.max(0.2, sec);
+    let sec = AUTO_ATTACK_BASE_INTERVAL - (game.upgrades.autoSpd * AUTO_ATTACK_GOLD_STEP) - (game.soulUpgrades.autoSpd * AUTO_ATTACK_SOUL_STEP);
+    sec *= getAutoSpeedBuffMultiplier();
+    return Math.max(AUTO_ATTACK_MIN_INTERVAL, sec);
   }
 
   function restartAutoAttackLoop() {
     if (autoTimer) clearInterval(autoTimer);
     if (game.autoAttack) {
-      const intervalMs = Math.floor(getAutoInterval() * 1000);
+      const intervalMs = Math.max(10, Math.round(getAutoInterval() * 1000));
       autoTimer = setInterval(() => {
         if (game.autoAttack) tapAttack(true);
       }, intervalMs);
@@ -1236,23 +1880,36 @@
       const isOwned = game.unlockedSkills.includes(sk.id);
       const slotIndex = game.equippedSkills.indexOf(sk.id);
       const isEquipped = slotIndex !== -1;
+      const upgradeCost = getSkillUpgradeCost(sk.id);
 
       const card = document.createElement('div');
-      card.className = "flex justify-between items-center bg-gray-950/60 p-2.5 rounded-xl border border-gray-800";
+      card.className = "flex justify-between items-center bg-gray-950/60 p-2.5 rounded-xl border border-gray-800 gap-2";
       
       card.innerHTML = `
-        <div class="flex-1 pr-2">
-          <div class="text-xs font-bold text-white">${sk.name}</div>
-          <div class="text-[10px] text-gray-400 mt-0.5">${sk.desc}</div>
+        <div class="flex-1 pr-1 min-w-0">
+          <div class="text-xs font-bold text-white flex items-center gap-1.5 flex-wrap">
+            <span>${sk.name}</span>
+            <span class="text-[10px] text-emerald-300">Lv.${getSkillLevel(sk.id)}</span>
+            ${isEquipped ? '<span class="text-[10px] px-1.5 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-400/20">장착</span>' : ''}
+          </div>
+          <div class="text-[10px] text-gray-400 mt-0.5 leading-4">${sk.desc}</div>
+          <div class="text-[10px] text-cyan-300 mt-1">강화 효과: ${getSkillUpgradeSummary(sk.id)}</div>
+          <div class="text-[10px] text-gray-500 mt-0.5">강화 비용: ${upgradeCost} 💎</div>
         </div>
-        <div class="flex items-center gap-2">
+        <div class="flex flex-col items-end gap-1.5 shrink-0">
           ${!isOwned ? `
             <button onclick="buySkill('${sk.id}')" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-black font-extrabold text-xs rounded-lg active:scale-95 flex items-center gap-1">
               <span>💎</span>${sk.priceGem}
             </button>
+            <button disabled class="px-3 py-1.5 bg-gray-800 text-gray-500 border border-gray-700 font-extrabold text-[10px] rounded-lg cursor-not-allowed">
+              해금 필요
+            </button>
           ` : `
-            <button onclick="toggleEquipSkill('${sk.id}')" class="px-3 py-1.5 ${isEquipped ? 'bg-rose-600' : 'bg-indigo-600'} text-white font-extrabold text-xs rounded-lg active:scale-95">
+            <button onclick="toggleEquipSkill('${sk.id}')" class="px-3 py-1.5 ${isEquipped ? 'bg-rose-600' : 'bg-indigo-600'} text-white font-extrabold text-xs rounded-lg active:scale-95 w-full">
               ${isEquipped ? `해제` : '장착'}
+            </button>
+            <button onclick="upgradeSkill('${sk.id}')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-[10px] rounded-lg active:scale-95 w-full">
+              강화
             </button>
           `}
         </div>
@@ -1267,18 +1924,39 @@
 
     if (game.currencies.gem >= sk.priceGem) {
       game.currencies.gem -= sk.priceGem;
-      game.unlockedSkills.push(skId);
+      if (!game.unlockedSkills.includes(skId)) game.unlockedSkills.push(skId);
+      game.skillLevels = normalizeSkillLevels(game.skillLevels || {});
       
       if (game.equippedSkills[0] === null) game.equippedSkills[0] = skId;
       else if (game.equippedSkills[1] === null) game.equippedSkills[1] = skId;
 
       renderSkillShop();
+      updateSkillSlotsUI();
       updateUI();
       saveGame();
       showModal("스킬 습득", `${sk.name} 스킬을 장착했습니다.`);
     } else {
       showModal("보석 부족", "보석(💎)이 부족합니다.");
     }
+  }
+
+  function upgradeSkill(skId) {
+    const sk = SKILL_SHOP.find(s => s.id === skId);
+    if (!sk || !game.unlockedSkills.includes(skId)) {
+      showModal("강화 불가", "스킬을 먼저 해금해야 강화할 수 있습니다.");
+      return;
+    }
+    const cost = getSkillUpgradeCost(skId);
+    if (game.currencies.gem < cost) {
+      showModal("보석 부족", "보석(💎)이 부족합니다.");
+      return;
+    }
+    game.currencies.gem -= cost;
+    game.skillLevels = normalizeSkillLevels(game.skillLevels || {});
+    game.skillLevels[skId] = getSkillLevel(skId) + 1;
+    renderSkillShop();
+    updateUI();
+    saveGame();
   }
 
   function toggleEquipSkill(skId) {
@@ -1297,6 +1975,13 @@
     renderSkillShop();
     updateSkillSlotsUI();
     saveGame();
+  }
+
+  function reduceEquippedSkillCooldowns(seconds) {
+    [...new Set(game.equippedSkills.filter(Boolean))].forEach(skId => {
+      game.skillCDs[skId] = Math.max(0, (game.skillCDs[skId] || 0) - seconds);
+    });
+    updateSkillSlotsUI();
   }
 
   function useSkillSlot(slotIdx) {
@@ -1320,6 +2005,8 @@
       game.skillCDs[skId] = sk.cd;
       sk.action();
       updateSkillSlotsUI();
+      updateUI();
+      saveGame();
     }
   }
 
@@ -1374,6 +2061,7 @@
     if (game.currencies.soul >= cost) {
       game.currencies.soul -= cost;
       game.soulUpgrades[type]++;
+      if (type === 'autoSpd') restartAutoAttackLoop();
       updateUI();
       saveGame();
     } else {
@@ -1400,17 +2088,11 @@
         autoSpd: 0,
         gold: 0
       };
-      game.skillBuffs = {
-        attackUntil: 0,
-        attackMultiplier: 1,
-        autoSpeedUntil: 0,
-        autoSpeedMultiplier: 1,
-        goldUntil: 0,
-        goldMultiplier: 1
-      };
+      game.skillBuffs = createDefaultGameState().skillBuffs;
       game.unlockedSkills = [];
       game.equippedSkills = [null, null];
       game.skillCDs = {};
+      game.skillLevels = normalizeSkillLevels();
       game.hero.name = '';
       game.hero.avatar = '';
       game.pendingHeroReroll = true;
@@ -1550,7 +2232,10 @@
     document.getElementById('bonus-soul-atk').innerText = game.soulUpgrades.atk * 15;
     document.getElementById('lvl-soul-gold').innerText = game.soulUpgrades.gold;
     document.getElementById('bonus-soul-gold').innerText = game.soulUpgrades.gold * 20;
+    document.getElementById('lvl-soul-autoSpd').innerText = game.soulUpgrades.autoSpd;
+    document.getElementById('stat-soul-autoSpd-val').innerText = getAutoInterval().toFixed(2);
 
+    renderSkillShop();
     renderQuests();
   }
 
