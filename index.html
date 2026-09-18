@@ -567,8 +567,7 @@
           <button onclick="doRebirth()" class="mt-1.5 w-full py-1.5 bg-purple-600 hover:bg-purple-500 text-white font-extrabold text-xs rounded-lg shadow active:scale-95">
             환생 진행하기
           </button>
-        </div>
-
+        </divsoul
         <div class="text-xs font-extrabold text-gray-300">영통 특성 강화</div>
         <div class="flex flex-col gap-2">
           <!-- Permanent Atk -->
@@ -644,7 +643,7 @@
               <div class="text-[10px] text-gray-400">Lv.<span id="lvl-soul-autoSpd">0</span> (기본 간격 -<span id="bonus-soul-autoSpd">0.00</span>s · 최저 0.01s)</div>
             </div>
             <button onclick="buySoulGoldUpgrade('autoSpeed', 1)" id="btn-soul-autoSpeed" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs rounded-lg active:scale-95">
-              💰 1
+              🔮 1
             </button>
           </div>
         </div>
@@ -775,12 +774,12 @@
 
   function formatSeconds(value) {
     const rounded = roundStat(value, 1);
-    return Number.isInteger(rounded) ? `${rounded}` : rounded.toFixed(1).replace(/\.0$/, '');
+    return Number.isInteger(rounded) ? `` : rounded.toFixed(1).replace(/\.0$/, '');
   }
 
   function formatMultiplier(value) {
     const rounded = roundStat(value, 2);
-    return Number.isInteger(rounded) ? `${rounded}` : rounded.toFixed(2).replace(/0+$/, '').replace(/\.$/, '');
+    return Number.isInteger(rounded) ? `` : rounded.toFixed(2).replace(/0+$/, '').replace(/\.$/, '');
   }
 
   function clampAutoAttackInterval(seconds) {
@@ -855,7 +854,7 @@
         const stats = getSkillComputedStats('power_surge');
         activateSkillBuff('attack', stats.durationMs, stats.attackMultiplier);
         playSkillEffect('skill-power');
-        showDmgText(`ATTACK ×${formatMultiplier(stats.attackMultiplier)}`, true);
+        showDmgText(`ATTACK ×`, true);
       }
     },
     {
@@ -868,7 +867,7 @@
         const stats = getSkillComputedStats('overclock');
         activateSkillBuff('autoSpeed', stats.durationMs, stats.intervalMultiplier);
         playSkillEffect('skill-haste');
-        showDmgText(`AUTO +${stats.speedBoostPct}%`, true);
+        showDmgText(`AUTO +%`, true);
       }
     },
     {
@@ -881,7 +880,7 @@
         const stats = getSkillComputedStats('gold_rush');
         activateSkillBuff('gold', stats.durationMs, stats.goldMultiplier);
         playSkillEffect('skill-gold');
-        showDmgText(`GOLD ×${formatMultiplier(stats.goldMultiplier)}`, true);
+        showDmgText(`GOLD ×`, true);
       }
     },
     {
@@ -912,7 +911,7 @@
         const targetMob = currentMob;
         clearMeteorDot();
         skillDamage(stats.impactMultiplier, 'METEOR!', 'skill-meteor');
-        showDmgText(`BURN ${stats.dotTicks}T`, true);
+        showDmgText(`BURN T`, true);
         let count = 0;
         meteorDotTimer = setInterval(() => {
           if (!currentMob || currentMob !== targetMob || currentMob.hp <= 0) {
@@ -1016,8 +1015,8 @@
         reduceAllSkillCooldowns(stats.cooldownReduction);
         activateSkillBuff('vitalityAutoSpeed', stats.durationMs, stats.intervalMultiplier);
         playSkillEffect('skill-vitality');
-        showDmgText(`CD -${formatSeconds(stats.cooldownReduction)}s`, true);
-        showDmgText(`AUTO +${stats.speedBoostPct}%`, true);
+        showDmgText(`CD -s`, true);
+        showDmgText(`AUTO +%`, true);
       }
     }
   ];
@@ -1084,7 +1083,7 @@
 
         const finalName = reelText.innerText;
         game.hero.name = finalName;
-        game.hero.avatar = `https://i.pravatar.cc/150?u=${encodeURIComponent(finalName + Math.random())}`;
+        game.hero.avatar = `https://i.pravatar.cc/150?u=`;
 
         reelBox.classList.add('reel-shifted');
 
@@ -1099,8 +1098,8 @@
             let progress = 0;
             let syncTimer = setInterval(() => {
               progress += 10;
-              loadingBar.style.width = `${progress}%`;
-              loadingPct.innerText = `${progress}%`;
+              loadingBar.style.width = `%`;
+              loadingPct.innerText = `%`;
 
               if (progress >= 100) {
                 clearInterval(syncTimer);
@@ -1158,7 +1157,7 @@
     const scale = Math.pow(1.28, game.stage - 1) * (isBoss ? 2.2 : 1.0);
 
     currentMob = {
-      name: isBoss ? `🔥 [BOSS] ${baseMob.name}` : baseMob.name,
+      name: isBoss ? `🔥 [BOSS] ` : baseMob.name,
       emoji: baseMob.emoji,
       maxHp: Math.floor(baseMob.hp * scale),
       hp: Math.floor(baseMob.hp * scale),
@@ -1208,7 +1207,7 @@
     mobEmoji.classList.toggle('mob-blocking', currentMob.blocking && !isFrozen);
     mobEmoji.classList.toggle('mob-frozen', isFrozen);
     if (isFrozen) {
-      status.innerText = `❄️ 빙결 ${Math.ceil((currentMob.frozenUntil - now) / 1000)}초`;
+      status.innerText = `❄️ 빙결 초`;
       status.className = 'text-[10px] font-extrabold text-cyan-300 h-4 mt-0.5';
     } else if (currentMob.blocking) {
       status.innerText = '🛡️ 방어 태세 · 피해 감소';
@@ -1376,7 +1375,7 @@
       if (currentMob.isBoss) {
         let bossGems = 15 + (game.stage * 3);
         game.currencies.gem += bossGems;
-        showDmgText(`+${bossGems} 💎`, true);
+        showDmgText(`+ 💎`, true);
       } else if (Math.random() < 0.1) {
         game.currencies.gem += 1;
       }
@@ -1498,24 +1497,24 @@
       card.innerHTML = `
         <div class="flex-1 min-w-0 pr-1">
           <div class="flex items-center gap-1 flex-wrap">
-            <div class="text-xs font-bold text-white">${sk.name}</div>
-            ${isOwned ? `<span class="px-1.5 py-0.5 rounded-full bg-indigo-500/15 border border-indigo-400/30 text-[9px] font-black text-indigo-200">Lv.${stats.level}</span>` : ''}
+            <div class="text-xs font-bold text-white"></div>
+            </span>` : ''}
           </div>
-          <div class="text-[10px] text-gray-400 mt-0.5 leading-4">${stats.description}</div>
-          <div class="text-[10px] text-cyan-300 mt-1 leading-4">${stats.effectSummary}</div>
-          ${isOwned ? `<div class="text-[9px] text-amber-300 mt-0.5 leading-4">다음 강화: ${stats.upgradeSummary}</div>` : ''}
+          <div class="text-[10px] text-gray-400 mt-0.5 leading-4"></div>
+          <div class="text-[10px] text-cyan-300 mt-1 leading-4"></div>
+           </div>` : ''
         </div>
         <div class="flex flex-col items-end gap-1.5 shrink-0">
           ${!isOwned ? `
-            <button onclick="buySkill('${sk.id}')" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-black font-extrabold text-xs rounded-lg active:scale-95 flex items-center gap-1">
-              <span>💎</span>${sk.priceGem}
+            <button onclick="buySkill('')" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-black font-extrabold text-xs rounded-lg active:scale-95 flex items-center gap-1">
+              <span>💎</span>
             </button>
           ` : `
-            <button onclick="toggleEquipSkill('${sk.id}')" class="w-full px-3 py-1.5 ${isEquipped ? 'bg-rose-600' : 'bg-indigo-600'} text-white font-extrabold text-xs rounded-lg active:scale-95">
-              ${isEquipped ? `해제` : '장착'}
+            <button onclick="toggleEquipSkill('')" class="w-full px-3 py-1.5  'bg-indigo-600' text-white font-extrabold text-xs rounded-lg active:scale-95">
+               '장착'
             </button>
-            <button onclick="upgradeSkill('${sk.id}')" class="w-full px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-[11px] rounded-lg active:scale-95">
-              💎 ${stats.upgradeCost}
+            <button onclick="upgradeSkill('')" class="w-full px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-[11px] rounded-lg active:scale-95">
+              💎 
             </button>
           `}
         </div>
@@ -1539,7 +1538,7 @@
       renderSkillShop();
       updateUI();
       saveGame();
-      showModal("스킬 습득", `${sk.name} 스킬을 장착했습니다.`);
+      showModal("스킬 습득", ` 스킬을 장착했습니다.`);
     } else {
       showModal("보석 부족", "보석(💎)이 부족합니다.");
     }
@@ -1558,7 +1557,7 @@
     updateSkillSlotsUI();
     updateUI();
     saveGame();
-    showModal("스킬 강화", `${SKILL_SHOP.find(skill => skill.id === skId).name} Lv.${game.skillLevels[skId]} 달성!`);
+    showModal("스킬 강화", ` Lv.} 달성!`);
   }
 
   function toggleEquipSkill(skId) {
@@ -1652,14 +1651,14 @@
 
   function buySoulGoldUpgrade(type, cost) {
     if (type !== 'autoSpeed') return;
-    if (game.currencies.gold >= cost) {
-      game.currencies.gold -= cost;
+    if (game.currencies.soul >= cost) {
+      game.currencies.soul -= cost;
       game.soulUpgrades.autoSpeed++;
       restartAutoAttackLoop();
       updateUI();
       saveGame();
     } else {
-      showModal("골드 부족", "골드(💰)가 부족합니다.");
+      showModal("영혼 부족", "영혼(🔮)이 부족합니다.");
     }
   }
 
