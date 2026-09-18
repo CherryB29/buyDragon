@@ -184,15 +184,106 @@
       filter: brightness(2.5) grayscale(1) drop-shadow(0 0 12px #ffffff) !important;
     }
 
+    .battle-skill-overlay {
+      position: absolute;
+      pointer-events: none;
+      border-radius: 9999px;
+      z-index: 25;
+      overflow: visible;
+      transform-origin: center;
+      mix-blend-mode: screen;
+    }
+
+    .battle-skill-core {
+      position: absolute;
+      inset: 50%;
+      transform: translate(-50%, -50%);
+      font-size: clamp(1.75rem, 9vw, 4rem);
+      filter: drop-shadow(0 0 22px rgba(255,255,255,0.85));
+      animation: overlayCorePulse 0.85s ease-out forwards;
+    }
+
+    .battle-skill-ring,
+    .battle-skill-particle {
+      position: absolute;
+      inset: 0;
+      border-radius: 9999px;
+    }
+
+    .battle-skill-ring {
+      border: 2px solid rgba(255,255,255,0.6);
+      animation: overlayRingExpand 0.9s ease-out forwards;
+    }
+
+    .battle-skill-particle {
+      width: 14%;
+      height: 14%;
+      left: 43%;
+      top: 43%;
+      background: radial-gradient(circle, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0) 72%);
+      animation: overlayParticleBurst 0.85s ease-out forwards;
+    }
+
+    .overlay-meteor { background: radial-gradient(circle, rgba(251, 146, 60, 0.45) 0%, rgba(239, 68, 68, 0.18) 45%, rgba(0,0,0,0) 72%); }
+    .overlay-meteor .battle-skill-ring { border-color: rgba(251, 146, 60, 0.78); box-shadow: 0 0 34px rgba(251, 146, 60, 0.55), inset 0 0 24px rgba(239, 68, 68, 0.35); }
+    .overlay-meteor-dot { background: radial-gradient(circle, rgba(251, 113, 133, 0.28) 0%, rgba(239, 68, 68, 0) 70%); }
+    .overlay-wind { background: radial-gradient(circle, rgba(56, 189, 248, 0.3) 0%, rgba(125, 211, 252, 0) 72%); }
+    .overlay-thunder { background: radial-gradient(circle, rgba(253, 224, 71, 0.32) 0%, rgba(234, 179, 8, 0) 72%); }
+    .overlay-poison { background: radial-gradient(circle, rgba(163, 230, 53, 0.28) 0%, rgba(34, 197, 94, 0) 72%); }
+    .overlay-shadow { background: radial-gradient(circle, rgba(192, 132, 252, 0.28) 0%, rgba(88, 28, 135, 0) 72%); }
+    .overlay-quake { background: radial-gradient(circle, rgba(251, 146, 60, 0.3) 0%, rgba(120, 53, 15, 0) 72%); }
+    .overlay-freeze { background: radial-gradient(circle, rgba(103, 232, 249, 0.3) 0%, rgba(34, 211, 238, 0) 72%); }
+    .overlay-burst { background: radial-gradient(circle, rgba(103, 232, 249, 0.2) 0%, rgba(99, 102, 241, 0) 72%); }
+    .overlay-power { background: radial-gradient(circle, rgba(251, 113, 133, 0.26) 0%, rgba(244, 63, 94, 0) 72%); }
+    .overlay-haste { background: radial-gradient(circle, rgba(125, 211, 252, 0.26) 0%, rgba(34, 211, 238, 0) 72%); }
+    .overlay-gold { background: radial-gradient(circle, rgba(250, 204, 21, 0.26) 0%, rgba(245, 158, 11, 0) 72%); }
+    .overlay-vitality { background: radial-gradient(circle, rgba(74, 222, 128, 0.28) 0%, rgba(34, 197, 94, 0) 72%); }
+
+    .overlay-wind .battle-skill-core,
+    .overlay-haste .battle-skill-core {
+      animation-duration: 0.6s;
+    }
+
+    .overlay-meteor .battle-skill-core {
+      animation: overlayMeteorDrop 0.95s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
+    }
+
+    @keyframes overlayCorePulse {
+      0% { opacity: 0; transform: translate(-50%, -50%) scale(0.2); }
+      30% { opacity: 1; transform: translate(-50%, -50%) scale(1.22); }
+      100% { opacity: 0; transform: translate(-50%, -50%) scale(1.45); }
+    }
+
+    @keyframes overlayMeteorDrop {
+      0% { opacity: 0; transform: translate(-50%, -185%) scale(0.3) rotate(-18deg); }
+      40% { opacity: 1; transform: translate(-50%, -68%) scale(1) rotate(10deg); }
+      60% { opacity: 1; transform: translate(-50%, -50%) scale(1.38) rotate(0deg); }
+      100% { opacity: 0; transform: translate(-50%, -50%) scale(1.8); }
+    }
+
+    @keyframes overlayRingExpand {
+      0% { opacity: 0.9; transform: scale(0.28); }
+      100% { opacity: 0; transform: scale(1.55); }
+    }
+
+    @keyframes overlayParticleBurst {
+      0% { opacity: 0; transform: translate(0, 0) scale(0.25); }
+      18% { opacity: 1; }
+      100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(1.25); }
+    }
+
     .freeze-flash { animation: freezeFlash 0.65s ease-out; }
     .skill-thunder { animation: thunderFlash 0.35s ease-out; }
     .skill-poison { animation: poisonPulse 0.55s ease-out; }
     .skill-shadow { animation: shadowSlash 0.3s ease-out; }
     .skill-quake { animation: quakePulse 0.5s ease-out; }
-    .skill-wind { animation: windRush 0.32s ease-out; }
+    .skill-wind { animation: windRush 0.28s ease-out; }
     .skill-power { animation: powerFlash 0.55s ease-out; }
     .skill-haste { animation: hasteFlash 0.55s ease-out; }
     .skill-gold { animation: goldFlash 0.55s ease-out; }
+    .skill-meteor { animation: meteorImpact 0.95s cubic-bezier(0.18, 0.89, 0.32, 1.28); }
+    .skill-meteor-burn { animation: meteorBurn 0.7s ease-out; }
+    .skill-vitality { animation: vitalityPulse 0.75s ease-out; }
 
     @keyframes freezeFlash {
       0% { filter: brightness(2.5) drop-shadow(0 0 18px #67e8f9); transform: scale(1.2); }
@@ -217,8 +308,9 @@
       75% { transform: translateX(7px) rotate(3deg); filter: drop-shadow(0 0 14px #fb923c); }
     }
     @keyframes windRush {
-      0% { opacity: 0.5; filter: blur(3px) drop-shadow(0 0 14px #38bdf8); transform: translateX(-18px); }
-      100% { opacity: 1; filter: blur(0); transform: translateX(0); }
+      0% { opacity: 0.45; filter: blur(5px) drop-shadow(0 0 22px #38bdf8); transform: translateX(-28px) scale(1.18); }
+      55% { opacity: 1; filter: blur(1px) drop-shadow(0 0 18px #7dd3fc); transform: translateX(16px) scale(1.12); }
+      100% { opacity: 1; filter: blur(0); transform: translateX(0) scale(1); }
     }
     @keyframes powerFlash {
       0% { filter: brightness(1); transform: scale(1); }
@@ -235,6 +327,26 @@
       35% { filter: brightness(2.4) drop-shadow(0 0 18px #facc15); transform: rotate(-5deg) scale(1.12); }
       70% { transform: rotate(5deg) scale(1.08); }
       100% { filter: brightness(1); transform: rotate(0) scale(1); }
+    }
+
+    @keyframes meteorImpact {
+      0% { filter: brightness(1.2) drop-shadow(0 0 0 transparent); transform: translateY(-38px) scale(0.7) rotate(-12deg); }
+      45% { filter: brightness(2.8) drop-shadow(0 0 26px #fb923c); transform: translateY(8px) scale(1.38) rotate(4deg); }
+      75% { filter: brightness(2.1) drop-shadow(0 0 38px #ef4444); transform: scale(1.52); }
+      100% { filter: brightness(1) drop-shadow(0 0 0 transparent); transform: scale(1); }
+    }
+
+    @keyframes meteorBurn {
+      0% { filter: brightness(1.8) drop-shadow(0 0 18px #fb7185); transform: scale(1.06); }
+      50% { filter: brightness(2.2) drop-shadow(0 0 24px #fb923c); transform: scale(1.16); }
+      100% { filter: brightness(1) drop-shadow(0 0 0 transparent); transform: scale(1); }
+    }
+
+    @keyframes vitalityPulse {
+      0% { filter: brightness(1) drop-shadow(0 0 0 transparent); transform: scale(1); }
+      40% { filter: brightness(2.15) drop-shadow(0 0 22px #4ade80); transform: scale(1.24); }
+      75% { filter: brightness(1.6) drop-shadow(0 0 18px #22c55e); transform: scale(1.14); }
+      100% { filter: brightness(1) drop-shadow(0 0 0 transparent); transform: scale(1); }
     }
   </style>
 </head>
@@ -310,6 +422,7 @@
 
   <!-- 3. BATTLE ARENA -->
   <main id="battle-field" class="relative flex-1 bg-gradient-to-b from-slate-950 via-gray-900 to-gray-950 flex flex-col justify-between p-4 overflow-hidden">
+    <div id="skill-overlay-layer" class="absolute inset-0 pointer-events-none overflow-hidden"></div>
     
     <!-- Characters (Hero vs Mob) -->
     <div class="flex justify-around items-center w-full my-auto py-2">
@@ -523,6 +636,17 @@
               120 🔮
             </button>
           </div>
+
+          <!-- Rebirth Auto Speed Upgrade -->
+          <div class="flex justify-between items-center bg-gray-950/60 p-2.5 rounded-xl border border-gray-800">
+            <div>
+              <div class="text-xs font-bold text-emerald-300">🌀 환생 자동 공속</div>
+              <div class="text-[10px] text-gray-400">Lv.<span id="lvl-soul-autoSpd">0</span> (기본 간격 -<span id="bonus-soul-autoSpd">0.00</span>s · 최저 0.01s)</div>
+            </div>
+            <button onclick="buySoulGoldUpgrade('autoSpeed', 1)" id="btn-soul-autoSpeed" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs rounded-lg active:scale-95">
+              💰 1
+            </button>
+          </div>
         </div>
       </div>
 
@@ -550,7 +674,7 @@
 </div>
 
 <script>
-  const HERO_NAMES = ["강해진","차은우","이도현","김우빈","송강","안효섭","남주혁","박보검","황민현","로운"];
+  const HERO_NAMES = ["강해진","차은우","이도현","김우빈","송강","안효섭","남주혁","박보검","황민현","로운","고건우","김민준","김서준","김도윤","김하준","김예준","김지후","김주원","김서진","김지호","이민준","이서준","이도윤","이예준","이지호","이준혁","이현우","이유진","이시우","이주원","박민준","박서준","박도윤","박지호","박준우","박시우","박서연","박지우","박예은","박하린","최민재","최지훈","최서윤","최유준","최하윤","최은우","최가온","최지안","최연우","최서우","정현우","정예준","정지우","정도현","정하율","정수아","정서아","정유나","정시윤","정서진"];
   
   const MONSTERS = [
     { name: "슬라임", emoji: "🟢", hp: 35, gold: 12 },
@@ -575,6 +699,133 @@
   const PATTERN_START_STAGE = 10;
   const TIME_WARP_DAMAGE_MULTIPLIER = 2;
   const ATTACK_SKILL_DAMAGE_MULTIPLIER = 10;
+  const MIN_AUTO_ATTACK_INTERVAL = 0.01;
+  const VITALITY_AUTO_SPEED_MULTIPLIER = 1 / 1.5;
+  const BUFF_CONFIG = {
+    attack: { untilKey: 'attackUntil', multiplierKey: 'attackMultiplier' },
+    autoSpeed: { untilKey: 'autoSpeedUntil', multiplierKey: 'autoSpeedMultiplier', restartAuto: true },
+    vitalityAutoSpeed: { untilKey: 'vitalityAutoSpeedUntil', multiplierKey: 'vitalityAutoSpeedMultiplier', restartAuto: true },
+    gold: { untilKey: 'goldUntil', multiplierKey: 'goldMultiplier' }
+  };
+
+  function createDefaultSkillBuffs() {
+    return {
+      attackUntil: 0,
+      attackMultiplier: 1,
+      autoSpeedUntil: 0,
+      autoSpeedMultiplier: 1,
+      vitalityAutoSpeedUntil: 0,
+      vitalityAutoSpeedMultiplier: 1,
+      goldUntil: 0,
+      goldMultiplier: 1
+    };
+  }
+
+  function createDefaultGameState() {
+    return {
+      hero: {
+        name: "",
+        avatar: "",
+      },
+      upgrades: {
+        atk: 0,
+        critRate: 0,
+        critDmg: 0,
+        autoSpd: 0,
+        gold: 0
+      },
+      currencies: {
+        gold: 0,
+        gem: 0,
+        soul: 0
+      },
+      stage: 1,
+      autoAttack: false,
+      
+      unlockedSkills: [],
+      equippedSkills: [null, null],
+      skillCDs: {},
+      skillLevels: {},
+      skillBuffs: createDefaultSkillBuffs(),
+      
+      soulUpgrades: {
+        atk: 0,
+        gold: 0,
+        autoSpeed: 0,
+        doubleHit: false,
+        bossDmg: false,
+        autoSkill: false,
+        autoUpgrade: false
+      },
+
+      quests: {
+        totalKills: 0,
+        totalTaps: 0,
+        claimed: {}
+      },
+
+      pendingHeroReroll: false
+    };
+  }
+
+  function roundStat(value, digits = 2) {
+    const factor = Math.pow(10, digits);
+    return Math.round(value * factor) / factor;
+  }
+
+  function formatSeconds(value) {
+    const rounded = roundStat(value, 1);
+    return Number.isInteger(rounded) ? `${rounded}` : rounded.toFixed(1).replace(/\.0$/, '');
+  }
+
+  function formatMultiplier(value) {
+    const rounded = roundStat(value, 2);
+    return Number.isInteger(rounded) ? `${rounded}` : rounded.toFixed(2).replace(/0+$/, '').replace(/\.$/, '');
+  }
+
+  function clampAutoAttackInterval(seconds) {
+    return Math.max(MIN_AUTO_ATTACK_INTERVAL, roundStat(seconds, 3));
+  }
+
+  function normalizeGameState(savedGame) {
+    const defaults = createDefaultGameState();
+    const source = savedGame && typeof savedGame === 'object' ? savedGame : {};
+    const normalized = {
+      ...defaults,
+      ...source,
+      hero: { ...defaults.hero, ...(source.hero || {}) },
+      upgrades: { ...defaults.upgrades, ...(source.upgrades || {}) },
+      currencies: { ...defaults.currencies, ...(source.currencies || {}) },
+      unlockedSkills: Array.isArray(source.unlockedSkills) ? [...new Set(source.unlockedSkills)] : [],
+      equippedSkills: Array.isArray(source.equippedSkills)
+        ? [source.equippedSkills[0] ?? null, source.equippedSkills[1] ?? null]
+        : [...defaults.equippedSkills],
+      skillCDs: source.skillCDs && typeof source.skillCDs === 'object' ? source.skillCDs : {},
+      skillLevels: source.skillLevels && typeof source.skillLevels === 'object' ? source.skillLevels : {},
+      skillBuffs: { ...defaults.skillBuffs, ...(source.skillBuffs || {}) },
+      soulUpgrades: { ...defaults.soulUpgrades, ...(source.soulUpgrades || {}) },
+      quests: {
+        ...defaults.quests,
+        ...(source.quests || {}),
+        claimed: { ...defaults.quests.claimed, ...((source.quests || {}).claimed || {}) }
+      }
+    };
+
+    normalized.unlockedSkills = normalized.unlockedSkills.filter(skId => SKILL_SHOP.some(skill => skill.id === skId));
+    normalized.equippedSkills = normalized.equippedSkills.map(skId => normalized.unlockedSkills.includes(skId) ? skId : null);
+    normalized.autoAttack = Boolean(normalized.autoAttack);
+
+    SKILL_SHOP.forEach(skill => {
+      if (normalized.unlockedSkills.includes(skill.id)) {
+        normalized.skillLevels[skill.id] = Math.max(1, Number(normalized.skillLevels[skill.id] || 1));
+      } else {
+        normalized.skillLevels[skill.id] = Math.max(0, Number(normalized.skillLevels[skill.id] || 0));
+      }
+      normalized.skillCDs[skill.id] = Math.max(0, Number(normalized.skillCDs[skill.id] || 0));
+    });
+
+    return normalized;
+  }
 
   const SKILL_SHOP = [
     {
@@ -584,13 +835,14 @@
       priceGem: 200,
       cd: 12,
       action: () => {
+        const stats = getSkillComputedStats('time_warp');
         playSkillEffect('skill-burst');
         let count = 0;
         let t = setInterval(() => {
-          tapAttack(true, true, TIME_WARP_DAMAGE_MULTIPLIER);
+          tapAttack(true, true, stats.damageMultiplier);
           count++;
-          if (count >= 12) clearInterval(t);
-        }, 100);
+          if (count >= stats.hits) clearInterval(t);
+        }, stats.intervalMs);
       }
     },
     {
@@ -600,9 +852,10 @@
       priceGem: 80,
       cd: 20,
       action: () => {
-        activateSkillBuff('attack', 10000, 2);
+        const stats = getSkillComputedStats('power_surge');
+        activateSkillBuff('attack', stats.durationMs, stats.attackMultiplier);
         playSkillEffect('skill-power');
-        showDmgText('ATTACK ×2', true);
+        showDmgText(`ATTACK ×${formatMultiplier(stats.attackMultiplier)}`, true);
       }
     },
     {
@@ -612,9 +865,10 @@
       priceGem: 100,
       cd: 25,
       action: () => {
-        activateSkillBuff('autoSpeed', 12000, 0.5);
+        const stats = getSkillComputedStats('overclock');
+        activateSkillBuff('autoSpeed', stats.durationMs, stats.intervalMultiplier);
         playSkillEffect('skill-haste');
-        showDmgText('AUTO SPEED UP!', true);
+        showDmgText(`AUTO +${stats.speedBoostPct}%`, true);
       }
     },
     {
@@ -624,9 +878,10 @@
       priceGem: 120,
       cd: 30,
       action: () => {
-        activateSkillBuff('gold', 15000, 2);
+        const stats = getSkillComputedStats('gold_rush');
+        activateSkillBuff('gold', stats.durationMs, stats.goldMultiplier);
         playSkillEffect('skill-gold');
-        showDmgText('GOLD ×2', true);
+        showDmgText(`GOLD ×${formatMultiplier(stats.goldMultiplier)}`, true);
       }
     },
     {
@@ -636,8 +891,9 @@
       priceGem: 450,
       cd: 18,
       action: () => {
+        const stats = getSkillComputedStats('frost_bind');
         if (!currentMob) return;
-        currentMob.frozenUntil = Date.now() + 4000;
+        currentMob.frozenUntil = Date.now() + stats.freezeDurationMs;
         currentMob.blocking = false;
         playSkillEffect('freeze-flash');
         showDmgText('FREEZE!', true);
@@ -651,9 +907,22 @@
       priceGem: 1200,
       cd: 30,
       action: () => {
-        if (currentMob) {
-          skillDamage(12, 'METEOR!', 'skill-burst');
-        }
+        const stats = getSkillComputedStats('meteor');
+        if (!currentMob) return;
+        const targetMob = currentMob;
+        clearMeteorDot();
+        skillDamage(stats.impactMultiplier, 'METEOR!', 'skill-meteor');
+        showDmgText(`BURN ${stats.dotTicks}T`, true);
+        let count = 0;
+        meteorDotTimer = setInterval(() => {
+          if (!currentMob || currentMob !== targetMob || currentMob.hp <= 0) {
+            clearMeteorDot();
+            return;
+          }
+          skillDamage(stats.dotMultiplier, '🔥 BURN', 'skill-meteor-burn');
+          count++;
+          if (count >= stats.dotTicks) clearMeteorDot();
+        }, stats.dotIntervalMs);
       }
     }
     ,
@@ -664,12 +933,13 @@
       priceGem: 650,
       cd: 22,
       action: () => {
+        const stats = getSkillComputedStats('thunder_chain');
         let count = 0;
         const timer = setInterval(() => {
-          skillDamage(1.35, '⚡ CHAIN', 'skill-thunder');
+          skillDamage(stats.hitMultiplier, '⚡ CHAIN', 'skill-thunder');
           count++;
-          if (count >= 3) clearInterval(timer);
-        }, 170);
+          if (count >= stats.hits) clearInterval(timer);
+        }, stats.intervalMs);
       }
     },
     {
@@ -679,12 +949,13 @@
       priceGem: 800,
       cd: 26,
       action: () => {
+        const stats = getSkillComputedStats('venom_burst');
         let count = 0;
         const timer = setInterval(() => {
-          skillDamage(0.65, '☣️ POISON', 'skill-poison');
+          skillDamage(stats.tickMultiplier, '☣️ POISON', 'skill-poison');
           count++;
-          if (count >= 6) clearInterval(timer);
-        }, 800);
+          if (count >= stats.ticks) clearInterval(timer);
+        }, stats.intervalMs);
       }
     },
     {
@@ -694,12 +965,13 @@
       priceGem: 900,
       cd: 25,
       action: () => {
+        const stats = getSkillComputedStats('shadow_barrage');
         let count = 0;
         const timer = setInterval(() => {
-          skillDamage(0.72, '🌑 SHADOW', 'skill-shadow');
+          skillDamage(stats.hitMultiplier, '🌑 SHADOW', 'skill-shadow');
           count++;
-          if (count >= 6) clearInterval(timer);
-        }, 95);
+          if (count >= stats.hits) clearInterval(timer);
+        }, stats.intervalMs);
       }
     },
     {
@@ -709,10 +981,11 @@
       priceGem: 1100,
       cd: 32,
       action: () => {
+        const stats = getSkillComputedStats('earth_breaker');
         if (!currentMob) return;
         currentMob.blocking = false;
-        currentMob.nextBlockAt = Date.now() + 3000;
-        skillDamage(3.2, '🌋 BREAK!', 'skill-quake');
+        currentMob.nextBlockAt = Date.now() + stats.guardBreakMs;
+        skillDamage(stats.damageMultiplier, '🌋 BREAK!', 'skill-quake');
         updateMobStatus();
       }
     },
@@ -723,63 +996,33 @@
       priceGem: 1300,
       cd: 28,
       action: () => {
+        const stats = getSkillComputedStats('wind_cutter');
         let count = 0;
         const timer = setInterval(() => {
-          skillDamage(1.05, '🌪️ CUT', 'skill-wind');
+          skillDamage(stats.hitMultiplier, '🌪️ CUT', 'skill-wind');
           count++;
-          if (count >= 4) clearInterval(timer);
-        }, 130);
+          if (count >= stats.hits) clearInterval(timer);
+        }, stats.intervalMs);
+      }
+    },
+    {
+      id: "vitality",
+      name: "💚 활력",
+      desc: "모든 스킬 쿨다운을 줄이고 자동 공격 속도를 잠시 끌어올립니다.",
+      priceGem: 250,
+      cd: 5,
+      action: () => {
+        const stats = getSkillComputedStats('vitality');
+        reduceAllSkillCooldowns(stats.cooldownReduction);
+        activateSkillBuff('vitalityAutoSpeed', stats.durationMs, stats.intervalMultiplier);
+        playSkillEffect('skill-vitality');
+        showDmgText(`CD -${formatSeconds(stats.cooldownReduction)}s`, true);
+        showDmgText(`AUTO +${stats.speedBoostPct}%`, true);
       }
     }
   ];
 
-  let game = {
-    hero: {
-      name: "",
-      avatar: "",
-    },
-    upgrades: {
-      atk: 0,
-      critRate: 0,
-      critDmg: 0,
-      autoSpd: 0,
-      gold: 0
-    },
-    currencies: {
-      gold: 0,
-      gem: 0,
-      soul: 0
-    },
-    stage: 1,
-    autoAttack: false,
-    
-    unlockedSkills: [],
-    equippedSkills: [null, null],
-    skillCDs: {},
-    skillBuffs: {
-      attackUntil: 0,
-      attackMultiplier: 1,
-      autoSpeedUntil: 0,
-      autoSpeedMultiplier: 1,
-      goldUntil: 0,
-      goldMultiplier: 1
-    },
-    
-    soulUpgrades: {
-      atk: 0,
-      gold: 0,
-      doubleHit: false,
-      bossDmg: false,
-      autoSkill: false,
-      autoUpgrade: false
-    },
-
-    quests: {
-      totalKills: 0,
-      totalTaps: 0,
-      claimed: {}
-    }
-  };
+  let game = createDefaultGameState();
 
   let currentMob = null;
   let autoTimer = null;
@@ -787,7 +1030,11 @@
   let skillBuffTimers = {};
   let autoSkillTimer = null;
   let autoUpgradeTimer = null;
+  let skillCooldownTimer = null;
+  let autoSaveTimer = null;
+  let meteorDotTimer = null;
   let selectingSkillId = null;
+  let lastSkillOverlayAt = {};
 
   function saveGame() {
     localStorage.setItem('HERO_RAISE_M_SAVE_V2', JSON.stringify(game));
@@ -797,10 +1044,7 @@
     const saved = localStorage.getItem('HERO_RAISE_M_SAVE_V2');
     if (saved) {
       try {
-        game = JSON.parse(saved);
-        game.skillBuffs = game.skillBuffs || {};
-        game.soulUpgrades.autoSkill = game.soulUpgrades.autoSkill || false;
-        game.soulUpgrades.autoUpgrade = game.soulUpgrades.autoUpgrade || false;
+        game = normalizeGameState(JSON.parse(saved));
         if (game.pendingHeroReroll) {
           document.getElementById('gacha-screen').classList.remove('hidden');
           setTimeout(startGachaSpin, 250);
@@ -889,19 +1133,24 @@
     }
 
     // Skill cooldown tick loop
-    setInterval(() => {
-      for (let skId in game.skillCDs) {
-        if (game.skillCDs[skId] > 0) {
-          game.skillCDs[skId] = Math.max(0, game.skillCDs[skId] - 0.1);
+    if (!skillCooldownTimer) {
+      skillCooldownTimer = setInterval(() => {
+        for (let skId in game.skillCDs) {
+          if (game.skillCDs[skId] > 0) {
+            game.skillCDs[skId] = Math.max(0, game.skillCDs[skId] - 0.1);
+          }
         }
-      }
-      updateSkillSlotsUI();
-    }, 100);
+        updateSkillSlotsUI();
+      }, 100);
+    }
 
-    setInterval(saveGame, 5000);
+    if (!autoSaveTimer) {
+      autoSaveTimer = setInterval(saveGame, 5000);
+    }
   }
 
   function spawnMob() {
+    clearMeteorDot();
     const isBoss = (game.stage % 5 === 0);
     const mobIndex = (game.stage - 1) % MONSTERS.length;
     const baseMob = MONSTERS[mobIndex];
@@ -972,24 +1221,34 @@
 
   function playSkillEffect(className) {
     const mobEmoji = document.getElementById('txt-mob-emoji');
+    const effectMap = {
+      'skill-burst': { overlay: 'burst', duration: 650, throttleMs: 140 },
+      'freeze-flash': { overlay: 'freeze', duration: 800, throttleMs: 200 },
+      'skill-thunder': { overlay: 'thunder', duration: 650, throttleMs: 120 },
+      'skill-poison': { overlay: 'poison', duration: 700, throttleMs: 220 },
+      'skill-shadow': { overlay: 'shadow', duration: 560, throttleMs: 90 },
+      'skill-quake': { overlay: 'quake', duration: 760, throttleMs: 180 },
+      'skill-wind': { overlay: 'wind', duration: 620, throttleMs: 85 },
+      'skill-power': { overlay: 'power', duration: 700, throttleMs: 220 },
+      'skill-haste': { overlay: 'haste', duration: 680, throttleMs: 220 },
+      'skill-gold': { overlay: 'gold', duration: 680, throttleMs: 220 },
+      'skill-meteor': { overlay: 'meteor', duration: 1050, throttleMs: 0, force: true },
+      'skill-meteor-burn': { overlay: 'meteor-dot', duration: 700, throttleMs: 220 },
+      'skill-vitality': { overlay: 'vitality', duration: 760, throttleMs: 160 }
+    };
+    const effect = effectMap[className];
     mobEmoji.classList.remove(className);
     void mobEmoji.offsetWidth;
     mobEmoji.classList.add(className);
+    if (effect) spawnBattleOverlay(effect.overlay, effect.duration, effect.force, effect.throttleMs);
     if (className !== 'mob-frozen') {
-      setTimeout(() => mobEmoji.classList.remove(className), 700);
+      setTimeout(() => mobEmoji.classList.remove(className), effect ? effect.duration : 700);
     }
   }
 
   function getSkillBuffState() {
-    game.skillBuffs = game.skillBuffs || {};
-    const defaults = {
-      attackUntil: 0,
-      attackMultiplier: 1,
-      autoSpeedUntil: 0,
-      autoSpeedMultiplier: 1,
-      goldUntil: 0,
-      goldMultiplier: 1
-    };
+    game.skillBuffs = game.skillBuffs || createDefaultSkillBuffs();
+    const defaults = createDefaultSkillBuffs();
     Object.keys(defaults).forEach(key => {
       if (game.skillBuffs[key] === undefined) game.skillBuffs[key] = defaults[key];
     });
@@ -997,13 +1256,10 @@
   }
 
   function activateSkillBuff(type, duration, multiplier) {
+    const config = BUFF_CONFIG[type];
+    if (!config) return;
     const buffs = getSkillBuffState();
-    const keyMap = {
-      attack: ['attackUntil', 'attackMultiplier'],
-      autoSpeed: ['autoSpeedUntil', 'autoSpeedMultiplier'],
-      gold: ['goldUntil', 'goldMultiplier']
-    };
-    const [untilKey, multiplierKey] = keyMap[type];
+    const { untilKey, multiplierKey, restartAuto } = config;
     buffs[untilKey] = Date.now() + duration;
     buffs[multiplierKey] = multiplier;
 
@@ -1011,29 +1267,25 @@
     skillBuffTimers[type] = setTimeout(() => {
       buffs[untilKey] = 0;
       buffs[multiplierKey] = 1;
-      if (type === 'autoSpeed') restartAutoAttackLoop();
+      if (restartAuto) restartAutoAttackLoop();
       saveGame();
     }, duration + 50);
 
-    if (type === 'autoSpeed') restartAutoAttackLoop();
+    if (restartAuto) restartAutoAttackLoop();
     saveGame();
   }
 
   function syncSkillBuffs() {
     const buffs = getSkillBuffState();
     const now = Date.now();
-    Object.entries({
-      attack: ['attackUntil', 'attackMultiplier'],
-      autoSpeed: ['autoSpeedUntil', 'autoSpeedMultiplier'],
-      gold: ['goldUntil', 'goldMultiplier']
-    }).forEach(([type, [untilKey, multiplierKey]]) => {
+    Object.entries(BUFF_CONFIG).forEach(([type, { untilKey, multiplierKey, restartAuto }]) => {
       const remaining = buffs[untilKey] - now;
       if (remaining > 0) {
-        if (type === 'autoSpeed') restartAutoAttackLoop();
+        if (restartAuto) restartAutoAttackLoop();
         skillBuffTimers[type] = setTimeout(() => {
           buffs[untilKey] = 0;
           buffs[multiplierKey] = 1;
-          if (type === 'autoSpeed') restartAutoAttackLoop();
+          if (restartAuto) restartAutoAttackLoop();
           saveGame();
         }, remaining + 50);
       } else {
@@ -1063,6 +1315,7 @@
     }
     playSkillEffect(effectClass);
     currentMob.hp -= damage;
+    if (label) showDmgText(label, true);
     showDmgText(damage, true);
     checkMobDefeat();
     updateUI();
@@ -1187,11 +1440,12 @@
   }
 
   function getAutoInterval() {
-    // Base 1.8s down to min 0.2s
-    let sec = 1.8 - (game.upgrades.autoSpd * 0.08);
+    let sec = 1.8 - (game.upgrades.autoSpd * 0.08) - (game.soulUpgrades.autoSpeed * 0.03);
     const buffs = getSkillBuffState();
-    if (buffs.autoSpeedUntil > Date.now()) sec *= buffs.autoSpeedMultiplier;
-    return Math.max(0.2, sec);
+    const now = Date.now();
+    if (buffs.autoSpeedUntil > now) sec *= buffs.autoSpeedMultiplier;
+    if (buffs.vitalityAutoSpeedUntil > now) sec *= buffs.vitalityAutoSpeedMultiplier;
+    return clampAutoAttackInterval(sec);
   }
 
   function restartAutoAttackLoop() {
@@ -1236,23 +1490,32 @@
       const isOwned = game.unlockedSkills.includes(sk.id);
       const slotIndex = game.equippedSkills.indexOf(sk.id);
       const isEquipped = slotIndex !== -1;
+      const stats = getSkillComputedStats(sk.id);
 
       const card = document.createElement('div');
-      card.className = "flex justify-between items-center bg-gray-950/60 p-2.5 rounded-xl border border-gray-800";
+      card.className = "flex justify-between items-start bg-gray-950/60 p-2.5 rounded-xl border border-gray-800 gap-2";
       
       card.innerHTML = `
-        <div class="flex-1 pr-2">
-          <div class="text-xs font-bold text-white">${sk.name}</div>
-          <div class="text-[10px] text-gray-400 mt-0.5">${sk.desc}</div>
+        <div class="flex-1 min-w-0 pr-1">
+          <div class="flex items-center gap-1 flex-wrap">
+            <div class="text-xs font-bold text-white">${sk.name}</div>
+            ${isOwned ? `<span class="px-1.5 py-0.5 rounded-full bg-indigo-500/15 border border-indigo-400/30 text-[9px] font-black text-indigo-200">Lv.${stats.level}</span>` : ''}
+          </div>
+          <div class="text-[10px] text-gray-400 mt-0.5 leading-4">${stats.description}</div>
+          <div class="text-[10px] text-cyan-300 mt-1 leading-4">${stats.effectSummary}</div>
+          ${isOwned ? `<div class="text-[9px] text-amber-300 mt-0.5 leading-4">다음 강화: ${stats.upgradeSummary}</div>` : ''}
         </div>
-        <div class="flex items-center gap-2">
+        <div class="flex flex-col items-end gap-1.5 shrink-0">
           ${!isOwned ? `
             <button onclick="buySkill('${sk.id}')" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-black font-extrabold text-xs rounded-lg active:scale-95 flex items-center gap-1">
               <span>💎</span>${sk.priceGem}
             </button>
           ` : `
-            <button onclick="toggleEquipSkill('${sk.id}')" class="px-3 py-1.5 ${isEquipped ? 'bg-rose-600' : 'bg-indigo-600'} text-white font-extrabold text-xs rounded-lg active:scale-95">
+            <button onclick="toggleEquipSkill('${sk.id}')" class="w-full px-3 py-1.5 ${isEquipped ? 'bg-rose-600' : 'bg-indigo-600'} text-white font-extrabold text-xs rounded-lg active:scale-95">
               ${isEquipped ? `해제` : '장착'}
+            </button>
+            <button onclick="upgradeSkill('${sk.id}')" class="w-full px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-[11px] rounded-lg active:scale-95">
+              💎 ${stats.upgradeCost}
             </button>
           `}
         </div>
@@ -1268,6 +1531,7 @@
     if (game.currencies.gem >= sk.priceGem) {
       game.currencies.gem -= sk.priceGem;
       game.unlockedSkills.push(skId);
+      game.skillLevels[skId] = Math.max(1, Number(game.skillLevels[skId] || 1));
       
       if (game.equippedSkills[0] === null) game.equippedSkills[0] = skId;
       else if (game.equippedSkills[1] === null) game.equippedSkills[1] = skId;
@@ -1279,6 +1543,22 @@
     } else {
       showModal("보석 부족", "보석(💎)이 부족합니다.");
     }
+  }
+
+  function upgradeSkill(skId) {
+    if (!game.unlockedSkills.includes(skId)) return;
+    const stats = getSkillComputedStats(skId);
+    if (game.currencies.gem < stats.upgradeCost) {
+      showModal("보석 부족", "보석(💎)이 부족합니다.");
+      return;
+    }
+    game.currencies.gem -= stats.upgradeCost;
+    game.skillLevels[skId] = stats.level + 1;
+    renderSkillShop();
+    updateSkillSlotsUI();
+    updateUI();
+    saveGame();
+    showModal("스킬 강화", `${SKILL_SHOP.find(skill => skill.id === skId).name} Lv.${game.skillLevels[skId]} 달성!`);
   }
 
   function toggleEquipSkill(skId) {
@@ -1317,7 +1597,7 @@
 
     const cd = game.skillCDs[skId] || 0;
     if (cd <= 0) {
-      game.skillCDs[skId] = sk.cd;
+      game.skillCDs[skId] = getSkillComputedStats(skId).cooldown;
       sk.action();
       updateSkillSlotsUI();
     }
@@ -1370,6 +1650,19 @@
     }
   }
 
+  function buySoulGoldUpgrade(type, cost) {
+    if (type !== 'autoSpeed') return;
+    if (game.currencies.gold >= cost) {
+      game.currencies.gold -= cost;
+      game.soulUpgrades.autoSpeed++;
+      restartAutoAttackLoop();
+      updateUI();
+      saveGame();
+    } else {
+      showModal("골드 부족", "골드(💰)가 부족합니다.");
+    }
+  }
+
   function buySoulUpgrade(type, cost) {
     if (game.currencies.soul >= cost) {
       game.currencies.soul -= cost;
@@ -1400,17 +1693,11 @@
         autoSpd: 0,
         gold: 0
       };
-      game.skillBuffs = {
-        attackUntil: 0,
-        attackMultiplier: 1,
-        autoSpeedUntil: 0,
-        autoSpeedMultiplier: 1,
-        goldUntil: 0,
-        goldMultiplier: 1
-      };
+      game.skillBuffs = createDefaultSkillBuffs();
       game.unlockedSkills = [];
       game.equippedSkills = [null, null];
       game.skillCDs = {};
+      game.skillLevels = {};
       game.hero.name = '';
       game.hero.avatar = '';
       game.pendingHeroReroll = true;
@@ -1550,8 +1837,331 @@
     document.getElementById('bonus-soul-atk').innerText = game.soulUpgrades.atk * 15;
     document.getElementById('lvl-soul-gold').innerText = game.soulUpgrades.gold;
     document.getElementById('bonus-soul-gold').innerText = game.soulUpgrades.gold * 20;
+    document.getElementById('lvl-soul-autoSpd').innerText = game.soulUpgrades.autoSpeed;
+    document.getElementById('bonus-soul-autoSpd').innerText = (game.soulUpgrades.autoSpeed * 0.03).toFixed(2);
 
     renderQuests();
+  }
+
+  function getSkillLevel(skId) {
+    return game.unlockedSkills.includes(skId)
+      ? Math.max(1, Number(game.skillLevels[skId] || 1))
+      : 0;
+  }
+
+  function getSkillUpgradeCost(skId, level = getSkillLevel(skId) || 1) {
+    const skill = SKILL_SHOP.find(entry => entry.id === skId);
+    if (!skill) return 0;
+    const base = Math.max(40, Math.floor(skill.priceGem * 0.55));
+    return Math.floor(base * Math.pow(1.45, Math.max(0, level - 1)));
+  }
+
+  function getSkillComputedStats(skId) {
+    const level = Math.max(1, getSkillLevel(skId) || 1);
+    const bonusLevel = level - 1;
+    let stats = {
+      level,
+      cooldown: 0,
+      description: '',
+      effectSummary: '',
+      upgradeSummary: '',
+      upgradeCost: getSkillUpgradeCost(skId, level)
+    };
+
+    switch (skId) {
+      case 'time_warp': {
+        const hits = 12 + (bonusLevel * 2);
+        const intervalMs = Math.max(65, 100 - (bonusLevel * 3));
+        const durationSec = roundStat((hits * intervalMs) / 1000, 1);
+        const damageMultiplier = roundStat(TIME_WARP_DAMAGE_MULTIPLIER + (bonusLevel * 0.18), 2);
+        const cooldown = Math.max(6, roundStat(12 - (bonusLevel * 0.3), 1));
+        stats = {
+          ...stats,
+          hits,
+          intervalMs,
+          damageMultiplier,
+          cooldown,
+          description: `${formatSeconds(durationSec)}초간 ${hits}회 난무 연격을 퍼붓습니다.`,
+          effectSummary: `타격 ${hits}회 · 1회 피해 ${Math.round(damageMultiplier * ATTACK_SKILL_DAMAGE_MULTIPLIER)}배 · 쿨 ${formatSeconds(cooldown)}초`,
+          upgradeSummary: `연격 +2회 · 1회 피해 증가 · 쿨다운 -0.3초`
+        };
+        break;
+      }
+      case 'power_surge': {
+        const attackMultiplier = roundStat(2 + (bonusLevel * 0.18), 2);
+        const durationSec = roundStat(10 + (bonusLevel * 0.5), 1);
+        const cooldown = Math.max(8, roundStat(20 - (bonusLevel * 0.4), 1));
+        stats = {
+          ...stats,
+          attackMultiplier,
+          durationMs: Math.round(durationSec * 1000),
+          cooldown,
+          description: `${formatSeconds(durationSec)}초 동안 공격력이 ${formatMultiplier(attackMultiplier)}배가 됩니다.`,
+          effectSummary: `공격력 ×${formatMultiplier(attackMultiplier)} · 지속 ${formatSeconds(durationSec)}초 · 쿨 ${formatSeconds(cooldown)}초`,
+          upgradeSummary: `공격 배율 증가 · 지속 +0.5초 · 쿨다운 -0.4초`
+        };
+        break;
+      }
+      case 'overclock': {
+        const speedFactor = roundStat(2 + (bonusLevel * 0.08), 2);
+        const intervalMultiplier = roundStat(1 / speedFactor, 3);
+        const speedBoostPct = Math.round((speedFactor - 1) * 100);
+        const durationSec = roundStat(12 + (bonusLevel * 0.5), 1);
+        const cooldown = Math.max(9, roundStat(25 - (bonusLevel * 0.45), 1));
+        stats = {
+          ...stats,
+          intervalMultiplier,
+          speedBoostPct,
+          durationMs: Math.round(durationSec * 1000),
+          cooldown,
+          description: `${formatSeconds(durationSec)}초 동안 자동 공격 속도가 ${speedBoostPct}% 증가합니다.`,
+          effectSummary: `자동공속 +${speedBoostPct}% · 지속 ${formatSeconds(durationSec)}초 · 쿨 ${formatSeconds(cooldown)}초`,
+          upgradeSummary: `공속 상승량 증가 · 지속 +0.5초 · 쿨다운 -0.45초`
+        };
+        break;
+      }
+      case 'gold_rush': {
+        const goldMultiplier = roundStat(2 + (bonusLevel * 0.14), 2);
+        const durationSec = roundStat(15 + (bonusLevel * 0.6), 1);
+        const cooldown = Math.max(10, roundStat(30 - (bonusLevel * 0.55), 1));
+        stats = {
+          ...stats,
+          goldMultiplier,
+          durationMs: Math.round(durationSec * 1000),
+          cooldown,
+          description: `${formatSeconds(durationSec)}초 동안 몬스터 처치 골드가 ${formatMultiplier(goldMultiplier)}배가 됩니다.`,
+          effectSummary: `골드 ×${formatMultiplier(goldMultiplier)} · 지속 ${formatSeconds(durationSec)}초 · 쿨 ${formatSeconds(cooldown)}초`,
+          upgradeSummary: `골드 배율 증가 · 지속 +0.6초 · 쿨다운 -0.55초`
+        };
+        break;
+      }
+      case 'frost_bind': {
+        const freezeDurationSec = roundStat(4 + (bonusLevel * 0.25), 1);
+        const cooldown = Math.max(7, roundStat(18 - (bonusLevel * 0.35), 1));
+        stats = {
+          ...stats,
+          freezeDurationMs: Math.round(freezeDurationSec * 1000),
+          cooldown,
+          description: `적을 ${formatSeconds(freezeDurationSec)}초간 얼려 가드를 끊고 방어 패턴을 멈춥니다.`,
+          effectSummary: `빙결 ${formatSeconds(freezeDurationSec)}초 · 방어 해제 · 쿨 ${formatSeconds(cooldown)}초`,
+          upgradeSummary: `빙결 지속 +0.25초 · 쿨다운 -0.35초`
+        };
+        break;
+      }
+      case 'meteor': {
+        const impactMultiplier = roundStat(28 + (bonusLevel * 4.5), 2);
+        const dotMultiplier = roundStat(2.4 + (bonusLevel * 0.35), 2);
+        const dotTicks = 6 + Math.floor(bonusLevel / 2);
+        const dotIntervalMs = 500;
+        const cooldown = Math.max(14, roundStat(30 - (bonusLevel * 0.6), 1));
+        stats = {
+          ...stats,
+          impactMultiplier,
+          dotMultiplier,
+          dotTicks,
+          dotIntervalMs,
+          cooldown,
+          description: `초대형 운석이 낙하해 직격 피해를 주고 ${(dotTicks * dotIntervalMs / 1000).toFixed(1)}초간 ${dotTicks}회 화상 피해를 남깁니다.`,
+          effectSummary: `직격 ${Math.round(impactMultiplier * ATTACK_SKILL_DAMAGE_MULTIPLIER)}배 + 화상 ${dotTicks}틱 · 쿨 ${formatSeconds(cooldown)}초`,
+          upgradeSummary: `직격/화상 피해 증가 · 화상 틱 확장 · 쿨다운 -0.6초`
+        };
+        break;
+      }
+      case 'thunder_chain': {
+        const hits = 3 + Math.floor(bonusLevel / 2);
+        const hitMultiplier = roundStat(1.35 + (bonusLevel * 0.18), 2);
+        const intervalMs = Math.max(120, 170 - (bonusLevel * 4));
+        const cooldown = Math.max(9, roundStat(22 - (bonusLevel * 0.4), 1));
+        stats = {
+          ...stats,
+          hits,
+          hitMultiplier,
+          intervalMs,
+          cooldown,
+          description: `번개가 ${hits}번 튀며 강한 연쇄 피해를 줍니다.`,
+          effectSummary: `연쇄 ${hits}회 · 1회 피해 ${Math.round(hitMultiplier * ATTACK_SKILL_DAMAGE_MULTIPLIER)}배 · 쿨 ${formatSeconds(cooldown)}초`,
+          upgradeSummary: `연쇄 피해 증가 · 일부 레벨에서 타수 +1 · 쿨다운 -0.4초`
+        };
+        break;
+      }
+      case 'venom_burst': {
+        const ticks = 6 + Math.floor(bonusLevel / 2);
+        const tickMultiplier = roundStat(0.65 + (bonusLevel * 0.1), 2);
+        const intervalMs = Math.max(500, 800 - (bonusLevel * 18));
+        const cooldown = Math.max(10, roundStat(26 - (bonusLevel * 0.45), 1));
+        stats = {
+          ...stats,
+          ticks,
+          tickMultiplier,
+          intervalMs,
+          cooldown,
+          description: `맹독이 퍼져 ${formatSeconds((ticks * intervalMs) / 1000)}초 동안 ${ticks}번 지속 피해를 줍니다.`,
+          effectSummary: `지속 ${ticks}틱 · 1틱 피해 ${Math.round(tickMultiplier * ATTACK_SKILL_DAMAGE_MULTIPLIER)}배 · 쿨 ${formatSeconds(cooldown)}초`,
+          upgradeSummary: `독 피해 증가 · 일부 레벨에서 틱 +1 · 쿨다운 -0.45초`
+        };
+        break;
+      }
+      case 'shadow_barrage': {
+        const hits = 6 + Math.floor(bonusLevel / 2);
+        const hitMultiplier = roundStat(0.72 + (bonusLevel * 0.08), 2);
+        const intervalMs = Math.max(70, 95 - (bonusLevel * 2));
+        const cooldown = Math.max(9, roundStat(25 - (bonusLevel * 0.45), 1));
+        stats = {
+          ...stats,
+          hits,
+          hitMultiplier,
+          intervalMs,
+          cooldown,
+          description: `그림자 칼날 ${hits}개가 빠르게 적을 관통합니다.`,
+          effectSummary: `칼날 ${hits}개 · 1회 피해 ${Math.round(hitMultiplier * ATTACK_SKILL_DAMAGE_MULTIPLIER)}배 · 쿨 ${formatSeconds(cooldown)}초`,
+          upgradeSummary: `칼날 피해 증가 · 일부 레벨에서 칼날 +1 · 쿨다운 -0.45초`
+        };
+        break;
+      }
+      case 'earth_breaker': {
+        const damageMultiplier = roundStat(3.2 + (bonusLevel * 0.35), 2);
+        const guardBreakSec = roundStat(3 + (bonusLevel * 0.2), 1);
+        const cooldown = Math.max(12, roundStat(32 - (bonusLevel * 0.55), 1));
+        stats = {
+          ...stats,
+          damageMultiplier,
+          guardBreakMs: Math.round(guardBreakSec * 1000),
+          cooldown,
+          description: `지면을 깨뜨려 큰 피해를 주고 적의 방어를 ${formatSeconds(guardBreakSec)}초 봉쇄합니다.`,
+          effectSummary: `피해 ${Math.round(damageMultiplier * ATTACK_SKILL_DAMAGE_MULTIPLIER)}배 · 방어 봉쇄 ${formatSeconds(guardBreakSec)}초 · 쿨 ${formatSeconds(cooldown)}초`,
+          upgradeSummary: `피해 증가 · 봉쇄 +0.2초 · 쿨다운 -0.55초`
+        };
+        break;
+      }
+      case 'wind_cutter': {
+        const hits = 32 + (bonusLevel * 2);
+        const hitMultiplier = roundStat(0.63 + (bonusLevel * 0.07), 2);
+        const intervalMs = Math.max(12, 16 - Math.floor(bonusLevel / 3));
+        const totalDuration = roundStat((hits * intervalMs) / 1000, 2);
+        const cooldown = Math.max(12, roundStat(28 - (bonusLevel * 0.45), 1));
+        stats = {
+          ...stats,
+          hits,
+          hitMultiplier,
+          intervalMs,
+          cooldown,
+          description: `${formatSeconds(totalDuration)}초 동안 ${hits}회 초고속 검격을 퍼붓습니다.`,
+          effectSummary: `타격 ${hits}회 · 1회 피해 ${Math.round(hitMultiplier * ATTACK_SKILL_DAMAGE_MULTIPLIER)}배 · 쿨 ${formatSeconds(cooldown)}초`,
+          upgradeSummary: `타격 피해 증가 · 타수 +2 · 총 시전 유지 · 쿨다운 -0.45초`
+        };
+        break;
+      }
+      case 'vitality': {
+        const cooldownReduction = roundStat(2 + (bonusLevel * 0.15), 1);
+        const durationSec = roundStat(2 + (bonusLevel * 0.15), 1);
+        const speedFactor = roundStat(1.5 + (bonusLevel * 0.12), 2);
+        const intervalMultiplier = roundStat(1 / speedFactor, 3);
+        const speedBoostPct = Math.round((speedFactor - 1) * 100);
+        const cooldown = Math.max(1.5, roundStat(5 - (bonusLevel * 0.15), 1));
+        stats = {
+          ...stats,
+          cooldownReduction,
+          durationMs: Math.round(durationSec * 1000),
+          intervalMultiplier,
+          speedBoostPct,
+          cooldown,
+          description: `모든 스킬의 남은 쿨다운을 ${formatSeconds(cooldownReduction)}초 줄이고 ${formatSeconds(durationSec)}초 동안 자동 공격 속도를 ${speedBoostPct}% 높입니다.`,
+          effectSummary: `전 스킬 쿨다운 -${formatSeconds(cooldownReduction)}초 · 자동공속 +${speedBoostPct}% · 쿨 ${formatSeconds(cooldown)}초`,
+          upgradeSummary: `쿨다운 감소량 증가 · 자동공속 상승량 증가 · 쿨다운 -0.15초`
+        };
+        break;
+      }
+      default:
+        break;
+    }
+
+    return stats;
+  }
+
+  function reduceAllSkillCooldowns(seconds) {
+    Object.keys(game.skillCDs).forEach(skId => {
+      game.skillCDs[skId] = Math.max(0, roundStat((game.skillCDs[skId] || 0) - seconds, 1));
+    });
+    updateSkillSlotsUI();
+  }
+
+  function clearMeteorDot() {
+    if (meteorDotTimer) {
+      clearInterval(meteorDotTimer);
+      meteorDotTimer = null;
+    }
+  }
+
+  function spawnBattleOverlay(type, duration = 700, force = false, throttleMs = 0) {
+    const battleField = document.getElementById('battle-field');
+    const overlayLayer = document.getElementById('skill-overlay-layer');
+    const mobContainer = document.getElementById('mob-container');
+    if (!battleField || !overlayLayer || !mobContainer) return;
+
+    const now = Date.now();
+    if (!force && throttleMs > 0 && lastSkillOverlayAt[type] && (now - lastSkillOverlayAt[type]) < throttleMs) {
+      return;
+    }
+    lastSkillOverlayAt[type] = now;
+
+    const battleRect = battleField.getBoundingClientRect();
+    const mobRect = mobContainer.getBoundingClientRect();
+    const size = Math.max(mobRect.width, mobRect.height) * (type === 'meteor' ? 2.35 : type === 'wind' ? 2.1 : 1.8);
+    const overlay = document.createElement('div');
+    overlay.className = `battle-skill-overlay overlay-${type}`;
+    overlay.style.width = `${size}px`;
+    overlay.style.height = `${size}px`;
+    overlay.style.left = `${mobRect.left - battleRect.left + (mobRect.width / 2) - (size / 2)}px`;
+    overlay.style.top = `${mobRect.top - battleRect.top + (mobRect.height / 2) - (size / 2) - (type === 'meteor' ? 28 : 8)}px`;
+
+    const icons = {
+      burst: '✦',
+      freeze: '❄️',
+      thunder: '⚡',
+      poison: '☣️',
+      shadow: '🌑',
+      quake: '🌋',
+      wind: '🌀',
+      power: '⚔️',
+      haste: '⏩',
+      gold: '💰',
+      meteor: '☄️',
+      'meteor-dot': '🔥',
+      vitality: '💚'
+    };
+    const particleCount = {
+      meteor: 12,
+      'meteor-dot': 7,
+      wind: 10,
+      thunder: 8,
+      poison: 7,
+      shadow: 7,
+      quake: 9,
+      burst: 7,
+      freeze: 8,
+      power: 7,
+      haste: 8,
+      gold: 8,
+      vitality: 9
+    }[type] || 6;
+
+    overlay.innerHTML = `
+      <div class="battle-skill-ring"></div>
+      <div class="battle-skill-core">${icons[type] || '✦'}</div>
+    `;
+
+    for (let i = 0; i < particleCount; i++) {
+      const particle = document.createElement('span');
+      particle.className = 'battle-skill-particle';
+      const angle = (Math.PI * 2 * i) / particleCount;
+      const distance = size * (type === 'meteor' ? 0.38 : 0.3);
+      particle.style.setProperty('--dx', `${Math.cos(angle) * distance}px`);
+      particle.style.setProperty('--dy', `${Math.sin(angle) * distance}px`);
+      overlay.appendChild(particle);
+    }
+
+    overlayLayer.appendChild(overlay);
+    setTimeout(() => overlay.remove(), duration);
   }
 
   function toggleAuto() {
